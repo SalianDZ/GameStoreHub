@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GameStoreHub.Common\GameStoreHub.Common.csproj" />
+  </ItemGroup>
+
 </Project>
