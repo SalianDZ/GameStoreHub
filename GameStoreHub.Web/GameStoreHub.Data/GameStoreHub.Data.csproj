@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GameStoreHub.Common\GameStoreHub.Common.csproj" />
+    <ProjectReference Include="..\GameStoreHub.Data.Models\GameStoreHub.Data.Models.csproj" />
   </ItemGroup>
 
 </Project>
