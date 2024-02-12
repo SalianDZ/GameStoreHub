@@ -1,4 +1,4 @@
-﻿using GameStoreHub.Web.Models;
+﻿using GameStoreHub.Web.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
