@@ -8,6 +8,7 @@ namespace GameStoreHub.Data.Models
         public OrderGame()
         {
             Id = Guid.NewGuid();
+            IsActive = true;
         }
 
         [Key]
@@ -27,5 +28,7 @@ namespace GameStoreHub.Data.Models
 
         [Required]
         public decimal PriceAtPurchase { get; set; }
+
+        public bool IsActive {get; set; }
     }
 }

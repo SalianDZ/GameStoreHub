@@ -8,6 +8,7 @@ namespace GameStoreHub.Data.Models
         public Category()
         {
             Games = new HashSet<Game>();
+            IsActive = true;
         }
 
         [Key]
@@ -17,6 +18,9 @@ namespace GameStoreHub.Data.Models
         [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 
+        public bool IsActive { get; set; }
+
         public virtual ICollection<Game> Games { get; set; }
+
     }
 }

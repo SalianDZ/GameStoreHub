@@ -8,7 +8,8 @@ namespace GameStoreHub.Data.Models
 	{
         public Review()
         {
-            Id = Guid.NewGuid();    
+            Id = Guid.NewGuid();  
+            IsActive = true;
         }
 
         [Key]
@@ -31,5 +32,7 @@ namespace GameStoreHub.Data.Models
 
         [MaxLength(CommentMaxLength)]
         public string? Comment { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

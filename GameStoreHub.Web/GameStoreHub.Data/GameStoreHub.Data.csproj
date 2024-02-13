@@ -21,4 +21,8 @@
     <ProjectReference Include="..\GameStoreHub.Data.Models\GameStoreHub.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+  </ItemGroup>
+
 </Project>

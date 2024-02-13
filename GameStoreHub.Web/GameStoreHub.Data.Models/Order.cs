@@ -9,6 +9,7 @@ namespace GameStoreHub.Data.Models
         {
             Id = Guid.NewGuid();
             OrderGames = new HashSet<OrderGame>();
+            IsActive = true;
         }
 
         [Key]
@@ -25,6 +26,8 @@ namespace GameStoreHub.Data.Models
 
         [Required]
         public decimal TotalPrice { get; set; }
+
+        public bool IsActive { get; set; }
 
         public virtual ICollection<OrderGame> OrderGames { get; set; }
     }

@@ -10,6 +10,7 @@ namespace GameStoreHub.Data.Models
         {
 			OrderGames = new HashSet<OrderGame>(); 
 			Id = Guid.NewGuid();
+			IsActive = true;
         }
 
         [Key]
@@ -33,7 +34,9 @@ namespace GameStoreHub.Data.Models
 		[Required]
         public DateTime ReleaseDate { get; set; }
 
-		[Required]
+        public bool IsActive { get; set; }
+
+        [Required]
         public int CategoryId { get; set; }
 
 		[ForeignKey(nameof(CategoryId))]
