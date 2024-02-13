@@ -19,7 +19,14 @@ namespace GameStoreHub.Web
 
 			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 			{
-				options.SignIn.RequireConfirmedAccount = false;
+				options.SignIn.RequireConfirmedAccount =
+					builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
+				options.Password.RequireNonAlphanumeric =
+					builder.Configuration.GetValue<bool>("Password:SignIn:RequireNonAlphanumeric");
+				options.Password.RequireUppercase =
+					builder.Configuration.GetValue<bool>("Password:SignIn:RequireUppercase");
+				options.Password.RequireLowercase = 
+					builder.Configuration.GetValue<bool>("Password:SignIn:RequireLowercase");
 			}).AddEntityFrameworkStores<GameStoreDbContext>();
 			builder.Services.AddControllersWithViews();
 
