@@ -32,6 +32,9 @@ namespace GameStoreHub.Data.Models
 		public string Developer { get; set; } = null!;
 
 		[Required]
+        public string ImagePath { get; set; }
+
+        [Required]
         public DateTime ReleaseDate { get; set; }
 
         public bool IsActive { get; set; }

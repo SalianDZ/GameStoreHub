@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace GameStoreHub.Data
 {
@@ -24,38 +25,10 @@ namespace GameStoreHub.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			builder.Entity<Order>()
-				.HasMany(o => o.OrderGames)
-				.WithOne(og => og.Order)
-				.HasForeignKey(og => og.OrderId)
-				.OnDelete(DeleteBehavior.Restrict);
+			Assembly configAssembly = Assembly.GetAssembly(typeof(GameStoreDbContext)) ??
+				Assembly.GetExecutingAssembly();	
 
-			builder.Entity<OrderGame>()
-				.HasOne(og => og.Order)
-				.WithMany(o => o.OrderGames)
-				.HasForeignKey(og => og.OrderId)
-				.OnDelete(DeleteBehavior.Restrict); // or another behavior as needed
-
-			builder.Entity<OrderGame>()
-				.HasOne(og => og.Game)
-				.WithMany(g => g.OrderGames) // Assuming Game doesn't have a navigation property back to OrderGame
-				.HasForeignKey(og => og.GameId)
-				.OnDelete(DeleteBehavior.Restrict);
-
-			builder.Entity<OrderGame>()
-				.Property(og => og.PriceAtPurchase)
-				.HasColumnType("decimal(18,2)");
-
-			builder.Entity<Order>()
-				.Property(o => o.TotalPrice)
-				.HasColumnType("decimal(18,2)");
-
-			builder.Entity<Game>()
-				.Property(g => g.Price)
-				.HasColumnType("decimal(18,2)");
-
-			builder.Entity<OrderGame>()
-				.HasKey(og => new { og.OrderId, og.GameId });
+            builder.ApplyConfigurationsFromAssembly(configAssembly);
 
 			base.OnModelCreating(builder);
 		}
