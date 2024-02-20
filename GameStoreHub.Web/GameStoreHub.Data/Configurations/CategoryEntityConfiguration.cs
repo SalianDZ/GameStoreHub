@@ -62,19 +62,3 @@ namespace GameStoreHub.Data.Configurations
     
     }
 }
-
-//Astral Voyagers
-
-//Category: Indie
-//Cryptic Dungeons
-
-//Category: Horror
-//Warlords of Terra
-
-//Category: Strategy
-//Speed Demons
-
-//Category: Sports
-//c
-
-//Category: Action
