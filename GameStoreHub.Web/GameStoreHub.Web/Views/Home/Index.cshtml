@@ -1,8 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Gamefinity";
+    ViewData["Description"] = "Your digital gateway to the latest and greatest in video games, where every click unveils new worlds to explore.";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- ======= Hero Section ======= -->
+<section id="hero">
+    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+        <h1>Welcome to @ViewData["Title"]</h1>
+        <h2>@ViewData["Description"]</h2>
+        <a href="#about" class="btn-get-started">Get Started</a>
+    </div>
+</section><!-- End Hero Section -->
