@@ -1,6 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Gamefinity";
     ViewData["Description"] = "Your digital gateway to the latest and greatest in video games, where every click unveils new worlds to explore.";
+    ViewData["AboutUs"] = "Gamefinity is the ultimate online destination for gaming enthusiasts. From indie gems to blockbuster hits, our carefully curated collection brings endless worlds of adventure right to your screen. Discover, explore, and dive into your next digital escapade with us.";
+    ViewData["FirstUnderSectionTitle"] = "Our Mission";
+    ViewData["FirstUnderSectionDescription"] = "Empowering gamers worldwide by providing an expansive digital library of video games. Our mission is to create a space where every gamer finds their next adventure, challenge, and community.";
+    ViewData["SecondUnderSectionTitle"] = "Why Choose Us";
+    ViewData["SecondUnderSectionDescription"] = "Unmatched Selection: From the latest releases to timeless classics, Gamefinity offers an unparalleled selection of games across all genres. Experience hassle-free browsing and instant access to your favorite titles.    ";
+    ViewData["ThirdUnderSectionTitle"] = "Community Focus";
+    ViewData["ThirdUnderSectionDescription"] = "At Gamefinity, we're more than just a store; we're a vibrant community of gamers. Join forums, share gameplay tips, participate in events, and connect with fellow gaming aficionados.";
 }
 
 <!-- ======= Hero Section ======= -->
@@ -11,3 +18,76 @@
         <a href="#about" class="btn-get-started">Get Started</a>
     </div>
 </section><!-- End Hero Section -->
+
+<main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about">
+        <div class="container" data-aos="fade-up">
+            <div class="row about-container">
+
+                <div class="col-lg-6 content order-lg-1 order-2">
+                    <h2 class="title">Few Words About Us</h2>
+                    <p>
+                        @ViewData["AboutUs"];
+                    </p>
+
+                    <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                        <div class="icon"><i class="bi bi-briefcase"></i></div>
+                        <h4 class="title">@ViewData["FirstUnderSectionTitle"]</h4>
+                        <p class="description">@ViewData["FirstUnderSectionDescription"]</p>
+                    </div>
+
+                    <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+                        <div class="icon"><i class="bi bi-card-checklist"></i></div>
+                        <h4 class="title">@ViewData["SecondUnderSectionTitle"]</h4>
+                        <p class="description">@ViewData["SecondUnderSectionDescription"]</p>
+                    </div>
+
+                    <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+                        <div class="icon"><i class="bi bi-binoculars"></i></div>
+                        <h4 class="title">@ViewData["SecondUnderSectionTitle"]</h4>
+                        <p class="description">@ViewData["SecondUnderSectionDescription"]</p>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 background order-lg-2 order-1" data-aos="fade-left" data-aos-delay="100"></div>
+            </div>
+
+        </div>
+    </section><!-- End About Section -->
+    <!-- ======= Facts Section ======= -->
+    <section id="facts">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <h3 class="section-title">Facts</h3>
+                <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+            </div>
+            <div class="row counters">
+
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+                    <p>Clients</p>
+                </div>
+
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="534" data-purecounter-duration="1" class="purecounter"></span>
+                    <p>Projects</p>
+                </div>
+
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
+                    <p>Hours Of Support</p>
+                </div>
+
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="42" data-purecounter-duration="1" class="purecounter"></span>
+                    <p>Hard Workers</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section><!-- End Facts Section -->
+</main>
