@@ -264,13 +264,13 @@ h6 {
   visibility: visible;
 }
 
-.login-container {
+/*.login-container {
     margin-left: 125px;
-}
+}*/
 
-@media(max-width: 643px) {
+@media(min-width: ) {
     .login-container {
-        margin-left:0px;
+        margin-left:125px;
     }
 }
 
