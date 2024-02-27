@@ -157,6 +157,7 @@ h6 {
 .navbar>ul>li {
   white-space: nowrap;
   padding: 10px 0 10px 24px;
+  cursor: pointer;
 }
 
 .navbar a,
