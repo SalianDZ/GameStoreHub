@@ -264,13 +264,9 @@ h6 {
   visibility: visible;
 }
 
-/*.login-container {
-    margin-left: 125px;
-}*/
-
-@media(min-width: ) {
+@media(min-width: 1280px) {
     .login-container {
-        margin-left:125px;
+        margin-left: 125px;
     }
 }
 
@@ -299,7 +295,6 @@ h6 {
 @media (max-width: 991px) {
   .mobile-nav-toggle {
     display: block;
-    margin-left: 0px !important;
   }
 
   .navbar ul {
