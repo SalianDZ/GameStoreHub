@@ -115,6 +115,7 @@ h6 {
 #header #logo img {
   padding: 0;
   margin: 0;
+  width: 75px;
 }
 
 #header.header-transparent {
@@ -263,6 +264,16 @@ h6 {
   visibility: visible;
 }
 
+.login-container {
+    margin-left: 125px;
+}
+
+@media(max-width: 643px) {
+    .login-container {
+        margin-left:0px;
+    }
+}
+
 @media (max-width: 1366px) {
   .navbar .dropdown .dropdown ul {
     left: -90%;
@@ -288,10 +299,11 @@ h6 {
 @media (max-width: 991px) {
   .mobile-nav-toggle {
     display: block;
+    margin-left: 0px !important;
   }
 
   .navbar ul {
-    display: none;
+    display: none;    
   }
 }
 
