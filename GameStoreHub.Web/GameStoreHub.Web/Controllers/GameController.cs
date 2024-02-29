@@ -6,7 +6,7 @@ namespace GameStoreHub.Web.Controllers
     {
         public IActionResult All()
         {
-            return Ok();
+            return View();
         }
     }
 }
