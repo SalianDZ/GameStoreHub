@@ -1,11 +1,10 @@
 using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Web
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
