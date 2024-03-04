@@ -20,7 +20,10 @@ namespace GameStoreHub.Data.Models
 
         public bool IsActive { get; set; }
 
-        public virtual ICollection<Game> Games { get; set; }
+        [Required]
+		public string ImagePath { get; set; }
+
+		public virtual ICollection<Game> Games { get; set; }
 
     }
 }

@@ -19,7 +19,8 @@ namespace GameStoreHub.Services.Data
 			IEnumerable<CategoryViewModel> allCategories = await dbContext.Categories.Where(c => c.IsActive).Select(c => new CategoryViewModel
 			{
 				Id = c.Id,
-				Name = c.Name
+				Name = c.Name,
+				ImagePath = c.ImagePath
 			}).ToArrayAsync();
 
 			return allCategories;
