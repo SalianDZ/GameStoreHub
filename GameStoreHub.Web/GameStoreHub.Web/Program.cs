@@ -1,5 +1,7 @@
 using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
+using GameStoreHub.Services.Data;
+using GameStoreHub.Services.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Web
@@ -27,6 +29,8 @@ namespace GameStoreHub.Web
 				options.Password.RequireLowercase = 
 					builder.Configuration.GetValue<bool>("Password:SignIn:RequireLowercase");
 			}).AddEntityFrameworkStores<GameStoreDbContext>();
+
+			builder.Services.AddScoped<ICategoryService, CategoryService>();
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();

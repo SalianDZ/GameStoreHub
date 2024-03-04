@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameStoreHub.Common\GameStoreHub.Common.csproj" />
     <ProjectReference Include="..\GameStoreHub.Data\GameStoreHub.Data.csproj" />
+    <ProjectReference Include="..\GameStoreHub.Services.Data\GameStoreHub.Services.Data.csproj" />
     <ProjectReference Include="..\GameStoreHub.Web.ViewModels\GameStoreHub.Web.ViewModels.csproj" />
   </ItemGroup>
 
