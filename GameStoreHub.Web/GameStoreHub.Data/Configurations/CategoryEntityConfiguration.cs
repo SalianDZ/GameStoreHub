@@ -21,7 +21,7 @@ namespace GameStoreHub.Data.Configurations
             {
                 Id = 1,
                 Name = "Action",
-                ImagePath = "~/images/Categories/actionGames.jpg"
+                ImagePath = "images/Categories/actionGames.jpg"
             };
 
             categories.Add(category);
@@ -30,7 +30,7 @@ namespace GameStoreHub.Data.Configurations
             { 
                 Id = 2,
                 Name = "Horror",
-				ImagePath = "~/images/Categories/horrorGames.jpg"
+				ImagePath = "images/Categories/horrorGames.jpg"
 			};
 
             categories.Add(category);
@@ -39,7 +39,7 @@ namespace GameStoreHub.Data.Configurations
             {
                 Id = 3,
                 Name = "Strategy",
-				ImagePath = "~/images/Categories/strategyGames.jpg"
+				ImagePath = "images/Categories/strategyGames.jpg"
 			};
 
             categories.Add(category);
@@ -48,7 +48,7 @@ namespace GameStoreHub.Data.Configurations
             {
                 Id = 4,
                 Name = "Indie",
-				ImagePath = "~/images/Categories/indieGames.jpg"
+				ImagePath = "images/Categories/indieGames.jpg"
 			};
 
             categories.Add(category);
@@ -57,7 +57,7 @@ namespace GameStoreHub.Data.Configurations
             {
                 Id = 5,
                 Name = "Sports",
-				ImagePath = "~/images/Categories/sportGames.jpg"
+				ImagePath = "images/Categories/sportGames.jpg"
 			};
 
             categories.Add(category);

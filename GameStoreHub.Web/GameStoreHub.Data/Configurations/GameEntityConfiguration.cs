@@ -27,9 +27,9 @@ namespace GameStoreHub.Data.Configurations
                 Description = "Embark on a cosmic journey across the universe, unraveling the mysteries of the stars.",
                 Price = 60.00M,
                 Developer = "Celestial Studios",
-                ImagePath = "images/games/astralVoyagers.jpeg",
+                ImagePath = "images/game/astralVoyagers.jpeg",
                 ReleaseDate = new DateTime(2022, 10, 10),
-                CategoryId = 2
+                CategoryId = 3
             };
 
             games.Add(game);
@@ -40,7 +40,7 @@ namespace GameStoreHub.Data.Configurations
                 Description = "Solve puzzles and battle mythical creatures to uncover ancient treasures.",
                 Price = 30.00m,
                 Developer = "Labyrinth Games",
-                ImagePath = "images/games/CrypticDungeons.jpeg",
+                ImagePath = "images/game/CrypticDungeons.jpeg",
                 ReleaseDate = new DateTime(2023, 2, 15),
                 CategoryId = 4
             };
@@ -53,9 +53,9 @@ namespace GameStoreHub.Data.Configurations
                 Description = "Command your armies in epic battles to conquer new lands and expand your empire.",
                 Price = 45.00m,
                 Developer = "Strategem Interactive",
-                ImagePath = "images/games/WarlordsofTerra.jpeg",
+                ImagePath = "images/game/WarlordsofTerra.jpeg",
                 ReleaseDate = new DateTime(2021, 8, 23),
-                CategoryId = 3
+                CategoryId = 2
             };
 
             games.Add(game);
@@ -66,7 +66,7 @@ namespace GameStoreHub.Data.Configurations
                 Description = "Race at breakneck speeds through city streets and winding country roads to become the ultimate champion.",
                 Price = 50.00m,
                 Developer = "Adrenaline Motorsports",
-                ImagePath = "images/games/SpeedDemons.jpeg",
+                ImagePath = "images/game/SpeedDemons.jpeg",
                 ReleaseDate = new DateTime(2022, 5, 14),
                 CategoryId = 5
             };
@@ -79,7 +79,7 @@ namespace GameStoreHub.Data.Configurations
                 Description = "Master martial arts and engage in fierce battles to defeat the shadow syndicate and save the world.",
                 Price = 20.00m,
                 Developer = "Combat Core Studios",
-                ImagePath = "images/games/ShadowFighters.jpeg",
+                ImagePath = "images/game/ShadowFighters.jpeg",
                 ReleaseDate = new DateTime(2022, 11, 30),
                 CategoryId = 1
             };

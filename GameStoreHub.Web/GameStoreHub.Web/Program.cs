@@ -31,6 +31,7 @@ namespace GameStoreHub.Web
 			}).AddEntityFrameworkStores<GameStoreDbContext>();
 
 			builder.Services.AddScoped<ICategoryService, CategoryService>();
+			builder.Services.AddScoped<IGameService, GameService>();
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
