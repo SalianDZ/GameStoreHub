@@ -68,7 +68,7 @@
 					<!-- LOGO -->
 					<div class="col-md-3">
 						<div class="header-logo">
-							<h1><a href="index.html">Gamefinity</a></h1>
+							<h1><a asp-controller="Home" asp-action="Index">Gamefinity</a></h1>
 						</div>
 					</div>
 					<!-- /LOGO -->
@@ -181,10 +181,9 @@
 							<h3 class="footer-title">Categories</h3>
 							<ul class="footer-links">
 								<li><a href="#">Hot deals</a></li>
-								<li><a href="#">Laptops</a></li>
-								<li><a href="#">Smartphones</a></li>
-								<li><a href="#">Cameras</a></li>
-								<li><a href="#">Accessories</a></li>
+								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 1 })">Action Titles</a></li>
+								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 2 })">Horror Titles</a></li>
+								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 5 })">Sport Titles</a></li>
 							</ul>
 						</div>
 					</div>

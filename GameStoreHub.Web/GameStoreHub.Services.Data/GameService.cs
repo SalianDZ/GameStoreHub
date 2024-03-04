@@ -31,5 +31,24 @@ namespace GameStoreHub.Services.Data
 
 			return allGamesFromCategory;
 		}
+
+		public async Task<IEnumerable<GamesViewModel>> GetLatestFiveGamesAsync()
+		{
+			IEnumerable<GamesViewModel> model = 
+				await dbContext.Games
+				.Include(g => g.Category)
+				.OrderByDescending(g => g.ReleaseDate)
+				.Take(5)
+				.Select(g => new GamesViewModel
+			{
+				Id = g.Id,
+				Title = g.Title,
+				Category = g.Category.Name,
+				Price = g.Price.ToString(),
+				ImagePath = g.ImagePath
+			}).ToArrayAsync();
+
+			return model;
+		}
 	}
 }

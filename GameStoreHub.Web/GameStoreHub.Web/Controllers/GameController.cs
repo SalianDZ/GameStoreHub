@@ -18,9 +18,9 @@ namespace GameStoreHub.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GamesByCategory(int categoryId)
+        public async Task<IActionResult> GamesByCategory(int id)
         {
-            IEnumerable<GamesViewModel> model = await gameService.GetAllGamesFromCategoryByCategoryIdAsync(categoryId);
+            IEnumerable<GamesViewModel> model = await gameService.GetAllGamesFromCategoryByCategoryIdAsync(id);
             return View(model);
         }
     }
