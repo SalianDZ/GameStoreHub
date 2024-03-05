@@ -34,5 +34,8 @@ namespace GameStoreHub.Data.Models
         public string? Comment { get; set; }
 
         public bool IsActive { get; set; }
+
+        [Required]
+        public DateTime DateCreated { get; set; }
     }
 }

@@ -109,7 +109,7 @@
 										</div>
 										<div class="product-body">
 											<p class="product-category">@newGame.Category</p>
-											<h3 class="product-name"><a href="#">@newGame.Title</a></h3>
+											<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@newGame.Id">@newGame.Title</a></h3>
 											<h4 class="product-price">$@newGame.Price <del class="product-old-price">$@newGame.Price</del></h4>
 											<div class="product-rating">
 												<i class="fa fa-star"></i>
@@ -195,7 +195,6 @@
 	<div class="container">
 		<!-- row -->
 		<div class="row">
-
 			<!-- section title -->
 			<div class="col-md-12">
 				<div class="section-title">

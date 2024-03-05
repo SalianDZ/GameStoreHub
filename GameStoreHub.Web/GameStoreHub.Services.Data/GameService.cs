@@ -14,7 +14,13 @@ namespace GameStoreHub.Services.Data
 			    this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<GamesViewModel>> GetAllGamesFromCategoryByCategoryIdAsync(int categoryId)
+		public async Task<bool> DoesGameExistByIdAsync(string id)
+		{
+			bool result = await dbContext.Games.AnyAsync(g => g.IsActive && g.Id == Guid.Parse(id));
+			return result;
+		}
+
+		public async Task<IEnumerable<GamesViewModel>> GetAllGamesFromCategoryByCategoryIdAsync(int categoryId)
 		{
 			IEnumerable<GamesViewModel> allGamesFromCategory =
 				await dbContext.Games
@@ -30,6 +36,24 @@ namespace GameStoreHub.Services.Data
 				}).ToArrayAsync();
 
 			return allGamesFromCategory;
+		}
+
+		public async Task<GameDetailsViewModel> GetGameForDetailsByIdAsync(string gameId)
+		{
+			GameDetailsViewModel model = await dbContext.Games.Where(g => g.IsActive && g.Id == Guid.Parse(gameId)).Select(g => new GameDetailsViewModel
+			{ 
+				Id= g.Id,
+				Title = g.Title,
+				Description = g.Description,
+				Developer = g.Developer,
+				Category = g.Category.Name,
+				ImagePath = g.ImagePath,
+				ReleaseDate = g.ReleaseDate.ToString("d"),
+				CategoryId = g.CategoryId,
+				Price = g.Price
+			}).FirstAsync();
+
+			return model;
 		}
 
 		public async Task<IEnumerable<GamesViewModel>> GetLatestFiveGamesAsync()

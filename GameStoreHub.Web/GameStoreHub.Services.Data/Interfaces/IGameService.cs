@@ -7,5 +7,9 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<GamesViewModel>> GetAllGamesFromCategoryByCategoryIdAsync(int categoryId);
 
 		Task<IEnumerable<GamesViewModel>> GetLatestFiveGamesAsync();
+
+		Task<bool> DoesGameExistByIdAsync(string id);
+
+		Task<GameDetailsViewModel> GetGameForDetailsByIdAsync(string gameId);
 	}
 }

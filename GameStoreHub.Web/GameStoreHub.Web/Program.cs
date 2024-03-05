@@ -32,6 +32,7 @@ namespace GameStoreHub.Web
 
 			builder.Services.AddScoped<ICategoryService, CategoryService>();
 			builder.Services.AddScoped<IGameService, GameService>();
+			builder.Services.AddScoped<IReviewService, ReviewService>();
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();

@@ -9,6 +9,7 @@ namespace GameStoreHub.Data.Models
         public Game()
         {
 			OrderGames = new HashSet<OrderGame>(); 
+			Reviews = new HashSet<Review>();
 			Id = Guid.NewGuid();
 			IsActive = true;
         }
@@ -46,5 +47,7 @@ namespace GameStoreHub.Data.Models
         public virtual Category Category { get; set; } = null!;
 
         public virtual ICollection<OrderGame> OrderGames { get; set; }
+
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

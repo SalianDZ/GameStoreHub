@@ -4,6 +4,7 @@ using GameStoreHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStoreHub.Data.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240305162409_AddedICollectionOfReviewInGameEntity")]
+    partial class AddedICollectionOfReviewInGameEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +198,7 @@ namespace GameStoreHub.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b9e1089a-6592-493e-8671-4acdd34990ae"),
+                            Id = new Guid("fdd93da0-f70c-497c-9468-4ce0aa3b2d03"),
                             CategoryId = 3,
                             Description = "Embark on a cosmic journey across the universe, unraveling the mysteries of the stars.",
                             Developer = "Celestial Studios",
@@ -208,7 +210,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d72378dd-144a-4def-bdfd-7657ec3ddd4b"),
+                            Id = new Guid("09d00e12-9e53-4f54-8520-81941700197e"),
                             CategoryId = 4,
                             Description = "Solve puzzles and battle mythical creatures to uncover ancient treasures.",
                             Developer = "Labyrinth Games",
@@ -220,7 +222,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6ca91596-eeec-4d5e-9cbb-fed2bdffde49"),
+                            Id = new Guid("24b7db78-704b-4da6-b4bc-85412c966ea8"),
                             CategoryId = 2,
                             Description = "Command your armies in epic battles to conquer new lands and expand your empire.",
                             Developer = "Strategem Interactive",
@@ -232,7 +234,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cdf08495-a2f6-48c0-8d17-4cd44a14d66d"),
+                            Id = new Guid("839a2ad7-f01d-475a-bd28-0dde7704fe64"),
                             CategoryId = 5,
                             Description = "Race at breakneck speeds through city streets and winding country roads to become the ultimate champion.",
                             Developer = "Adrenaline Motorsports",
@@ -244,7 +246,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8823d2cd-8f40-4d01-b0b4-f03705d9e401"),
+                            Id = new Guid("b087be15-8671-4df8-a586-d0a47435c208"),
                             CategoryId = 1,
                             Description = "Master martial arts and engage in fierce battles to defeat the shadow syndicate and save the world.",
                             Developer = "Combat Core Studios",
@@ -314,9 +316,6 @@ namespace GameStoreHub.Data.Migrations
                     b.Property<string>("Comment")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
