@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using static GameStoreHub.Common.EntityValidationConstants.User;
 
 namespace GameStoreHub.Data.Models
 {
@@ -8,6 +10,17 @@ namespace GameStoreHub.Data.Models
         {
                 Id = Guid.NewGuid();
         }
+
+        [Required]
+        [MaxLength(FirstNameMaxLength)]
+        public string FirstName { get; set; } = null!;
+
+        [Required]
+        [MaxLength(LastNameMaxLength)]
+        public string LastName { get; set; } = null!;
+
+        [Required]  
+        public decimal WalletBalance { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
 

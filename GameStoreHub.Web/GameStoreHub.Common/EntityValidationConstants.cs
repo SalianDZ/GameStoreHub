@@ -34,5 +34,17 @@
 			public const string RatingMaxValue = "5";
 			public const int CommentMaxLength = 500;
 		}
+
+		public static class User
+		{
+			public const int FirstNameMinLength = 2;
+			public const int FirstNameMaxLength = 50;
+
+			public const int LastNameMinLength = 2;
+			public const int LastNameMaxLength = 50;
+
+			public const int PasswordMinLength = 6;
+			public const int PasswordMaxLength = 100;
+		}
     }
 }

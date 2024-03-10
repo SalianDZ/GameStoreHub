@@ -30,7 +30,11 @@ namespace GameStoreHub.Data
 
             builder.ApplyConfigurationsFromAssembly(configAssembly);
 
-			base.OnModelCreating(builder);
+            builder.Entity<ApplicationUser>()
+			.Property(g => g.WalletBalance)
+			.HasColumnType("decimal(18,2)");
+
+            base.OnModelCreating(builder);
 		}
 	}
 }
