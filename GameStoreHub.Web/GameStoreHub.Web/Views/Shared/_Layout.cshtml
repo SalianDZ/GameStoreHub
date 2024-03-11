@@ -54,7 +54,19 @@
 						<li><a href="#"><i class="fa fa-map-marker"></i>@ViewData["Address"]</a></li>
 					</ul>
 					<ul class="header-links pull-right">
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li style="color:white;">Hello, @User.Identity.Name</li>
+							<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+							<form asp-area="Identity" asp-page="/Account/Logout" asp-route="/Home/Index">
+								<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+							</form>
+						}
+						else
+						{
+							<li><a asp-controller="User" asp-action="Login"><i class="fa fa-user-o"></i> Sign In</a></li>
+							<li><a asp-controller="User" asp-action="Register"><i class="fa fa-user-o"></i> Sign Up</a></li>
+						}
 					</ul>
 				</div>
 			</div>

@@ -31,19 +31,24 @@
 		      			<form method="post" class="signin-form">
 							<div class="form-group">
 								<input asp-for="@Model.FirstName" type="text" class="form-control" placeholder="Your first name here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<input asp-for="@Model.LastName" type="text" class="form-control" placeholder="Your last name here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
 							</div>
 		      				<div class="form-group">
 		      					<input asp-for="@Model.Email" type="text" class="form-control" placeholder="Your email here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
 		      				</div>
 							<div class="form-group">
 								<input asp-for="@Model.Password" id="password-field" type="password" class="form-control" placeholder="Your password here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
 								<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 							</div>
 							<div class="form-group">
 								<input asp-for="@Model.ConfirmPassword" id="password-field" type="password" class="form-control" placeholder="Confirm the password..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
 								<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 							</div>
 
