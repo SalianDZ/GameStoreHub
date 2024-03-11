@@ -27,4 +27,8 @@
     <ProjectReference Include="..\GameStoreHub.Web.ViewModels\GameStoreHub.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Pages\Account\" />
+  </ItemGroup>
+
 </Project>
