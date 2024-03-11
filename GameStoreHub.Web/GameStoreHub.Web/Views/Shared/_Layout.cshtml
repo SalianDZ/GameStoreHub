@@ -56,11 +56,11 @@
 					<ul class="header-links pull-right">
 						@if (User.Identity.IsAuthenticated)
 						{
-							<li style="color:white;">Hello, @User.Identity.Name</li>
+							<li style="color:white;">Hello, CurrentUser</li>
 							<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-							<form asp-area="Identity" asp-page="/Account/Logout" asp-route="/Home/Index">
+							<form asp-controller="User" asp-action="Logout" method="post" style="display: inline-block">
 								<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-							</form>
+							</form> 
 						}
 						else
 						{

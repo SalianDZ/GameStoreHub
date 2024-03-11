@@ -33,6 +33,12 @@ namespace GameStoreHub.Web
 			builder.Services.AddScoped<ICategoryService, CategoryService>();
 			builder.Services.AddScoped<IGameService, GameService>();
 			builder.Services.AddScoped<IReviewService, ReviewService>();
+
+			builder.Services.ConfigureApplicationCookie(cfg =>
+			{
+				cfg.LoginPath = "/User/Login";
+			});
+
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();

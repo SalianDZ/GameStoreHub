@@ -1,5 +1,69 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LoginFormModel
 @{
+	Layout = null;
 }
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Gamefinity</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="~/login-register-page/css/login.css">
+
+</head>
+<body class="img js-fullheight" style="background-image: url('/images/hero-bg2.jpeg')">
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Login</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+						<h3 class="mb-4 text-center">Do not have an account?<a asp-controller="User" asp-action="Register"><b>Sign up</b></a></h3>
+						<form method="post" class="signin-form">
+							<div class="form-group">
+								<input asp-for="Email" type="text" class="form-control" placeholder="Your email here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<input asp-for="Password" id="password-field" type="password" class="form-control" placeholder="Your password here..." required>
+								<span asp-validation-for="Email" class="text-danger"></span>
+								<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+							</div>
+							<div>
+								<div class="checkbox">
+									<label asp-for="RememberMe" class="form-label">
+										<input class="form-check-input" asp-for="RememberMe" />
+										@* @Html.DisplayNameFor(m => m.RememberMe) *@
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	@* @section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	} *@
+
+	<script src="~/login-register-page/js/jquery.min.js"></script>
+	<script src="~/login-register-page/js/popper.js"></script>
+	<script src="~/login-register-page/js/bootstrap.min.js"></script>
+	<script src="~/login-register-page/js/login.js"></script>
+
+</body>
+</html>

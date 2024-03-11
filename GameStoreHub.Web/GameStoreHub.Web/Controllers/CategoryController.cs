@@ -1,5 +1,6 @@
 ﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Category;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStoreHub.Web.Controllers
@@ -13,6 +14,7 @@ namespace GameStoreHub.Web.Controllers
             this.categoryService = categoryService;
         }
 
+		[Authorize]
         public async Task<IActionResult> All()
 		{
 			IEnumerable<CategoryViewModel> allCategories = await categoryService.GetAllCategoriesAsync();

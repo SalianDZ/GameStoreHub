@@ -1,5 +1,7 @@
 ﻿using GameStoreHub.Data.Models;
 using GameStoreHub.Web.ViewModels.User;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +55,45 @@ namespace GameStoreHub.Web.Controllers
                 return View(result);
             }
 			await signInManager.SignInAsync(user, false);
+			return RedirectToAction("Index", "Home");
+		}
+
+        [HttpGet]
+        public async Task<IActionResult> Login(string? returnUrl = null)
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            LoginFormModel model = new()
+            {
+                ReturnUrl = returnUrl
+            };
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
+            if (!result.Succeeded) 
+            {
+				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+			}
+
+            return Redirect(model.ReturnUrl ?? "/Home/Index");
+        }
+
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+        [Authorize]
+		public async Task<IActionResult> Logout()
+        {
+			await signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
     }
