@@ -34,6 +34,7 @@ namespace GameStoreHub.Web
 			builder.Services.AddScoped<IGameService, GameService>();
 			builder.Services.AddScoped<IReviewService, ReviewService>();
 			builder.Services.AddScoped<IUserService, UserService>();
+			builder.Services.AddScoped<ICartService, CartService>();
 
 			builder.Services.ConfigureApplicationCookie(cfg =>
 			{

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GameStoreHub.Data.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameStoreHub.Data.Models
@@ -10,6 +11,7 @@ namespace GameStoreHub.Data.Models
             Id = Guid.NewGuid();
             OrderGames = new HashSet<OrderGame>();
             IsActive = true;
+            OrderStatus = OrderStatus.InCart;
         }
 
         [Key]
@@ -28,6 +30,8 @@ namespace GameStoreHub.Data.Models
         public decimal TotalPrice { get; set; }
 
         public bool IsActive { get; set; }
+
+        public OrderStatus OrderStatus { get; set; }
 
         public virtual ICollection<OrderGame> OrderGames { get; set; }
     }

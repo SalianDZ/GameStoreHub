@@ -60,7 +60,7 @@
 						@if (User.Identity.IsAuthenticated)
 						{
 							<li style="color:white;">Hello, @fullName</li>
-							<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+							<li><a asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-o"></i> My Account</a></li>
 							<form asp-controller="User" asp-action="Logout" method="post" style="display: inline-block">
 								<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
 							</form> 
@@ -83,7 +83,7 @@
 						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
-								<h1><a asp-controller="Home" asp-action="Index">Gamefinity</a></h1>
+								<h1><a asp-controller="Home" asp-action="Index" class="text-center" style="color:white;">Gamefinity</a></h1>
 							</div>
 						</div>
 						<!-- /LOGO -->
