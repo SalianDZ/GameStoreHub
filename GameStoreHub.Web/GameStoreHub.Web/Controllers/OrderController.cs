@@ -2,23 +2,23 @@
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Order;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace GameStoreHub.Web.Controllers
 {
-	public class CartController : Controller
+	public class OrderController : Controller
 	{
 		private readonly ICartService cartService;
 
-        public CartController(ICartService cartService)
+        public OrderController(ICartService cartService)
         {
 			this.cartService = cartService;
         }
 
-        public async Task<IActionResult> Cart()
+		[HttpGet]
+        public async Task<IActionResult> Checkout()
 		{
 			string userId = User.GetId();
-			CartViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
+			CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
 			return View(model);
 		}
 	}

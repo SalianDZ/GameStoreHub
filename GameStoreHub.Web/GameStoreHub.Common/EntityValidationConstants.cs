@@ -26,7 +26,26 @@
 		public static class Order
 		{
 			public const int DefaultTotalPriceValue = 0;
-        }
+
+			//Billing information constants
+
+			public const int AddressMinLength = 20;
+			public const int AddressMaxLength = 255;
+
+			public const int CityMinLength = 3;
+			public const int CityMaxLength = 100;
+
+			public const int CountryMinLength = 3;
+			public const int CountryMaxLength = 50;
+
+			public const int ZipCodeMinLength = 2;
+			public const int ZipCodeMaxLength = 20;
+
+			public const int PhoneNumberMinLength = 10;
+			public const int PhoneNumberMaxLength = 15;
+
+			public const int OrderNotesMaxLength = 300;
+		}
 
 		public static class Review
 		{

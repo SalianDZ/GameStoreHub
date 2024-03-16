@@ -75,13 +75,13 @@ namespace GameStoreHub.Services.Data
 			return true;
 		}
 
-		public async Task<CartViewModel> GetCartViewModelByUserIdAsync(string userId)
+		public async Task<CheckoutViewModel> GetCartViewModelByUserIdAsync(string userId)
 		{
 			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-			CartViewModel model = new CartViewModel()
+			CheckoutViewModel model = new CheckoutViewModel()
 			{
-				Items = cart.OrderGames.Select(og => new CartItemViewModel
+				Items = cart.OrderGames.Select(og => new CheckoutItemViewModel
 				{
 					GameId = og.GameId,
 					GameTitle = og.Game.Title,

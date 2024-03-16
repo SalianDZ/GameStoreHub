@@ -7,6 +7,6 @@ namespace GameStoreHub.Services.Data.Interfaces
 	{
 		Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId);
 
-		Task<CartViewModel> GetCartViewModelByUserIdAsync(string userId);
+		Task<CheckoutViewModel> GetCartViewModelByUserIdAsync(string userId);
 	}
 }

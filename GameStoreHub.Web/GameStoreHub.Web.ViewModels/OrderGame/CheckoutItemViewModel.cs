@@ -1,6 +1,6 @@
 ﻿namespace GameStoreHub.Web.ViewModels.OrderGame
 {
-	public class CartItemViewModel
+	public class CheckoutItemViewModel
 	{
 		public Guid GameId { get; set; }
 		public string GameTitle { get; set; } = null!;

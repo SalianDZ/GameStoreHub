@@ -1,6 +1,7 @@
 ﻿using GameStoreHub.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static GameStoreHub.Common.EntityValidationConstants.Order;
 
 namespace GameStoreHub.Data.Models
 {
@@ -32,6 +33,31 @@ namespace GameStoreHub.Data.Models
         public bool IsActive { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
+
+        //Billing information
+
+        [Required]
+        [MaxLength(AddressMaxLength)]
+        public string Address { get; set; } = null!;
+
+        [Required]
+        [MaxLength(CityMaxLength)]
+        public string City { get; set; } = null!;
+
+        [Required]
+        [MaxLength(CountryMaxLength)]
+        public string Country { get; set; } = null!;
+
+        [Required]
+        [MaxLength(ZipCodeMaxLength)]
+        public string ZipCode { get; set; } = null!;
+
+        [Required]
+        [MaxLength(PhoneNumberMaxLength)]
+        public string PhoneNumber { get; set; } = null!;
+
+        [MaxLength(OrderNotesMaxLength)]
+        public string? OrderNotes { get; set; }
 
         public virtual ICollection<OrderGame> OrderGames { get; set; }
     }
