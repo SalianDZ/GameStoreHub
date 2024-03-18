@@ -1,12 +1,11 @@
-﻿using GameStoreHub.Data;
+﻿using GameStoreHub.Common;
+using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Data.Models.Enums;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Order;
 using GameStoreHub.Web.ViewModels.OrderGame;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Net;
 
 namespace GameStoreHub.Services.Data
 {
@@ -14,9 +13,14 @@ namespace GameStoreHub.Services.Data
 	{
 		private readonly GameStoreDbContext dbContext;
 
-        public CartService(GameStoreDbContext dbContext)
+		private readonly IGameService gameService;
+		private readonly IUserService userService;
+
+        public CartService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
         {
             this.dbContext = dbContext;
+			this.gameService = gameService;
+			this.userService = userService;
         }
 
 		public async Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId)
@@ -91,6 +95,64 @@ namespace GameStoreHub.Services.Data
 			};
 
 			return model;
+		}
+
+		public async Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model)
+		{
+			try
+			{
+				Order currrentOrder = await GetOrCreateCartForUserByUserIdAsync(userId);
+				currrentOrder.OrderStatus = OrderStatus.Completed;
+				currrentOrder.OrderDate = DateTime.Now;
+				OrderResult orderResult = new(currrentOrder.Id);
+				return orderResult;	
+			}
+			catch (Exception ex)
+			{
+				OrderResult orderResult = new(new List<string>()
+				{ 
+					ex.Message
+				});
+				return orderResult;
+			}
+
+		}
+
+		//Validation method below this comment!
+		//                |
+		//                V
+
+		public async Task<ValidationResult> ValidateCartByUserIdAsync(string userId, IEnumerable<CheckoutItemViewModel> cartItems)
+		{
+			var validationResult = new ValidationResult();
+
+			// Validate each cart item
+			foreach (var item in cartItems)
+			{
+				bool doesGameExist = await gameService.DoesGameExistByIdAsync(item.GameId.ToString());
+				if (!doesGameExist)
+				{
+					validationResult.Errors.Add($"Game {item.GameId} is no longer available.");
+					continue;
+				}
+
+				Game game = await gameService.GetGameByIdAsync(item.GameId.ToString());
+
+				if (!game.IsActive)
+				{
+					validationResult.Errors.Add($"Game {item.GameId} is no longer available.");
+					continue;
+				}
+
+				//if (item.PriceAtPurchase != game.Price)
+				//{
+				//	validationResult.Errors.Add($"Price for {game.Title} has changed.");
+				//	// Optionally adjust the cart item price here or mark it for review
+				//}
+			}
+
+			validationResult.IsValid = !validationResult.Errors.Any();
+			return validationResult;
 		}
 	}
 }

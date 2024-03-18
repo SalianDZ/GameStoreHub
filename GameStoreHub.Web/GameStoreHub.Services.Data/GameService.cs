@@ -1,4 +1,5 @@
 ﻿using GameStoreHub.Data;
+using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,13 @@ namespace GameStoreHub.Services.Data
 			return allGamesFromCategory;
 		}
 
-		public async Task<GameDetailsViewModel> GetGameForDetailsByIdAsync(string gameId)
+		public async Task<Game> GetGameByIdAsync(string id)
+		{
+			Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(id));
+			return game;
+		}
+
+		public async Task<GameDetailsViewModel> GetGameViewModelForDetailsByIdAsync(string gameId)
 		{
 			GameDetailsViewModel model = await dbContext.Games.Where(g => g.IsActive && g.Id == Guid.Parse(gameId)).Select(g => new GameDetailsViewModel
 			{ 

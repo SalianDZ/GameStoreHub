@@ -1,4 +1,5 @@
-﻿using GameStoreHub.Web.ViewModels.Game;
+﻿using GameStoreHub.Data.Models;
+using GameStoreHub.Web.ViewModels.Game;
 
 namespace GameStoreHub.Services.Data.Interfaces
 {
@@ -10,6 +11,8 @@ namespace GameStoreHub.Services.Data.Interfaces
 
 		Task<bool> DoesGameExistByIdAsync(string id);
 
-		Task<GameDetailsViewModel> GetGameForDetailsByIdAsync(string gameId);
+		Task<GameDetailsViewModel> GetGameViewModelForDetailsByIdAsync(string gameId);
+
+		Task<Game> GetGameByIdAsync(string id);
 	}
 }

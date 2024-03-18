@@ -34,7 +34,7 @@ namespace GameStoreHub.Web.Controllers
                 return NotFound();
             }
 
-            GameDetailsViewModel model = await gameService.GetGameForDetailsByIdAsync(id);
+            GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
             model.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
 
             return View(model);
