@@ -28,6 +28,7 @@ namespace GameStoreHub.Services.Data
 				Order? cart =
 				await dbContext.Orders
 				.Include(o => o.OrderGames)
+				.ThenInclude(o => o.Game)
 				.FirstOrDefaultAsync(o => o.UserId == Guid.Parse(userId) && o.IsActive && o.OrderStatus == OrderStatus.InCart);
 
 				if (cart == null)
