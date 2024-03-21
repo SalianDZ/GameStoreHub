@@ -125,7 +125,7 @@
 											</div>
 										</div>
 										<div class="add-to-cart">
-											<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a asp-controller="Order" asp-action="AddToCart" asp-route-id="@newGame.Id.ToString()">add to cart</a></button>
 										</div>
 									</div>
 									<!-- /product -->

@@ -133,6 +133,7 @@ namespace GameStoreHub.Services.Data
 				currrentOrder.City = model.BillingData.City;
 				currrentOrder.Country = model.BillingData.Country;
 				currrentOrder.ZipCode = model.BillingData.ZipCode;
+				currrentOrder.OrderNotes = model.BillingData.OrderNotes;
 				OrderResult orderResult = new(currrentOrder.Id);
 				return orderResult;	
 			}

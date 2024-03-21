@@ -104,5 +104,24 @@ namespace GameStoreHub.Web.Controllers
 
 			return View(model);
 		}
+
+		public async Task<IActionResult> AddToCart(string id)
+		{
+			if (!await gameService.DoesGameExistByIdAsync(id))
+			{
+				return BadRequest("Select a valid game");
+			}
+
+			var userId = User.GetId();
+			// Ensure you have a method to get the current user's ID
+			var success = await cartService. AddItemToCart(userId, id);
+
+			if (!success)
+			{
+				return BadRequest("Could not add the game to the cart, it might already be there.");
+			}
+
+			return RedirectToAction("Checkout", "Order");
+		}
 	}
 }

@@ -80,7 +80,7 @@
 					<p>Release Date: @Model.ReleaseDate</p>
 
 					<div class="add-to-cart">
-						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a asp-controller="Order" asp-action="AddToCart" asp-route-id="@Model.Id">add to cart</a></button>
 					</div>
 
 					<ul class="product-btns">
