@@ -84,15 +84,17 @@ namespace GameStoreHub.Services.Data
 		{
 			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-			CheckoutViewModel model = new CheckoutViewModel()
+			CheckoutViewModel model = new()
 			{
-				Items = cart.OrderGames.Select(og => new CheckoutItemViewModel
+				Items = cart.OrderGames
+				.Select(og => new CheckoutItemViewModel
 				{
 					GameId = og.GameId,
 					GameTitle = og.Game.Title,
 					GameImagePath = og.Game.ImagePath,
 					PriceAtPurchase = og.PriceAtPurchase
-				}).ToList()
+				})
+				.ToList()
 			};
 
 			return model;

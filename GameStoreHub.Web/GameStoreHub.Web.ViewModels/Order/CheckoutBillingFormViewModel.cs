@@ -17,7 +17,7 @@ namespace GameStoreHub.Web.ViewModels.Order
         public string Country { get; set; } = null!;
 
         [Required]
-        [StringLength(PhoneNumberMaxLength, MinimumLength =PhoneNumberMinLength)]
+        [StringLength(PhoneNumberMaxLength, MinimumLength = PhoneNumberMinLength)]
         public string PhoneNumber { get; set; } = null!;
 
         [Required]

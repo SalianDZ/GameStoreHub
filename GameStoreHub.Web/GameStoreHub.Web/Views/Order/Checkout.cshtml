@@ -37,8 +37,6 @@
 	<!-- /container -->
 </div>
 <!-- /BREADCRUMB -->
-<form method="post">
-
 
 <!-- SECTION -->
 <div class="section">
@@ -46,31 +44,32 @@
 	<div class="container">
 		<!-- row -->
 		<div class="row">
-
-			<div class="col-md-7">
+			<form asp-controller="Order" asp-action="Checkout" method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="col-md-7">
 				<!-- Billing Details -->
 				<div class="billing-details">
 					<div class="section-title">
 						<h3 class="title">Billing address</h3>
 					</div>
 					<div class="form-group">
-						<input class="input" type="text" name="address" placeholder="Address" asp-for="BillingData.Address">
+							<input class="input" asp-for="BillingData.Address" type="text" placeholder="Address">
 							<span asp-validation-for="BillingData.Address" class="small text-danger"></span>
 					</div>
 					<div class="form-group">
-						<input class="input" type="text" name="city" placeholder="City" asp-for="BillingData.City">
+						<input class="input" type="text" placeholder="City" asp-for="BillingData.City">
 							<span asp-validation-for="BillingData.City" class="small text-danger"></span>
 					</div>
 					<div class="form-group">
-						<input class="input" type="text" name="country" placeholder="Country" asp-for="BillingData.Country">
+						<input class="input" type="text" placeholder="Country" asp-for="BillingData.Country">
 							<span asp-validation-for="BillingData.Country" class="small text-danger"></span>
 					</div>
 					<div class="form-group">
-						<input class="input" type="text" name="zip-code" placeholder="ZIP Code" asp-for="BillingData.ZipCode">
+						<input class="input" type="text" placeholder="ZIP Code" asp-for="BillingData.ZipCode">
 							<span asp-validation-for="BillingData.ZipCode" class="small text-danger"></span>
 					</div>
 					<div class="form-group">
-						<input class="input" type="tel" name="tel" placeholder="Telephone" asp-for="BillingData.PhoneNumber">
+						<input class="input" type="tel" placeholder="Telephone" asp-for="BillingData.PhoneNumber">
 							<span asp-validation-for="BillingData.PhoneNumber" class="small text-danger"></span>
 					</div>
 				</div>
@@ -86,87 +85,87 @@
 				<!-- /Order notes -->
 			</div>
 
-			<!-- Order Details -->
-			<div class="col-md-5 order-details">
-				<div class="section-title text-center">
-					<h3 class="title">Your Order</h3>
-				</div>
-				<div class="order-summary">
-					<div class="order-col">
-						<div><strong>PRODUCT</strong></div>
-						<div><strong>TOTAL</strong></div>
+				<!-- Order Details -->
+				<div class="col-md-5 order-details">
+					<div class="section-title text-center">
+						<h3 class="title">Your Order</h3>
 					</div>
-					<div class="order-products">
-						@if (Model.Items.Count() <= 0)
-						{
-							<h3>No added products into your cart</h3>
-						}
-						else
-						{
-							@foreach (var product in Model.Items)
+					<div class="order-summary">
+						<div class="order-col">
+							<div><strong>PRODUCT</strong></div>
+							<div><strong>TOTAL</strong></div>
+						</div>
+						<div class="order-products">
+							@if (Model.Items.Count() <= 0)
 							{
-								<div class="order-col">
-									<div>@product.GameTitle</div>
-									<div>$@product.PriceAtPurchase</div>
-								</div>
+								<h3>No added products into your cart</h3>
 							}
-						}
-					</div>
-					<div class="order-col">
-						<div><strong>TOTAL</strong></div>
-						<div><strong class="order-total">$@Model.TotalPrice</strong></div>
-					</div>
-				</div>
-				<div class="payment-method">
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-1">
-						<label for="payment-1">
-							<span></span>
-							Credit or Debir Card
-						</label>
-						<div class="caption">
-							<p>You pay using your credit or debit card.</p>
+							else
+							{
+								@foreach (var product in Model.Items)
+								{
+									<div class="order-col">
+										<div>@product.GameTitle</div>
+										<div>$@product.PriceAtPurchase</div>
+									</div>
+								}
+							}
+						</div>
+						<div class="order-col">
+							<div><strong>TOTAL</strong></div>
+							<div><strong class="order-total">$@Model.TotalPrice</strong></div>
 						</div>
 					</div>
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-2">
-						<label for="payment-2">
-							<span></span>
-							Account balance
-						</label>
-						<div class="caption">
-							<p>You pay using your balance into your account.</p>
+					<div class="payment-method">
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-1">
+							<label for="payment-1">
+								<span></span>
+								Credit or Debir Card
+							</label>
+							<div class="caption">
+								<p>You pay using your credit or debit card.</p>
+							</div>
+						</div>
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-2">
+							<label for="payment-2">
+								<span></span>
+								Account balance
+							</label>
+							<div class="caption">
+								<p>You pay using your balance into your account.</p>
+							</div>
+						</div>
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-3">
+							<label for="payment-3">
+								<span></span>
+								Paypal System
+							</label>
+							<div class="caption">
+								<p>You pay using your paypal account.</p>
+							</div>
 						</div>
 					</div>
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-3">
-						<label for="payment-3">
+					<div class="input-checkbox">
+						<input type="checkbox" id="terms">
+						<label for="terms">
 							<span></span>
-							Paypal System
+							I've read and accept the <a href="#">terms & conditions</a>
 						</label>
-						<div class="caption">
-							<p>You pay using your paypal account.</p>
-						</div>
 					</div>
+						<input type="submit" class="primary-btn order-submit" value="Submit order">
+						@* <a href="#" class="primary-btn order-submit">Place order</a> *@
 				</div>
-				<div class="input-checkbox">
-					<input type="checkbox" id="terms">
-					<label for="terms">
-						<span></span>
-						I've read and accept the <a href="#">terms & conditions</a>
-					</label>
-				</div>
-					<input type="submit" class="primary-btn order-submit" value="Submit order">
-					@* <a href="#" class="primary-btn order-submit">Place order</a> *@
-			</div>
-			<!-- /Order Details -->
+				<!-- /Order Details -->
+			</form>
 		</div>
 		<!-- /row -->
 	</div>
 	<!-- /container -->
 </div>
 <!-- /SECTION -->
-</form>
 <!-- NEWSLETTER -->
 <div id="newsletter" class="section">
 	<!-- container -->
