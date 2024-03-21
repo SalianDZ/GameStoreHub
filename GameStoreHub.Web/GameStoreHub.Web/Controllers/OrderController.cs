@@ -40,6 +40,9 @@ namespace GameStoreHub.Web.Controllers
 			}
 
 			string userId = User.GetId();
+
+			model.Items = await cartService.GetItemsForCheckoutByUserIdAsync(userId);
+
 			ValidationResult validationResult = await cartService.ValidateCartByUserIdAsync(userId, model.Items);
 
 			if (!validationResult.IsValid)

@@ -40,6 +40,11 @@ namespace GameStoreHub.Services.Data
 						OrderDate = DateTime.UtcNow,
 						OrderStatus = OrderStatus.InCart, // Or whatever logic you use to denote an active cart
 						TotalPrice = 0,
+						Address = "",
+						City = "",
+						Country = "",
+						ZipCode = "",
+						PhoneNumber= "",
 						OrderGames = new HashSet<OrderGame>()
 					};
 
@@ -100,13 +105,34 @@ namespace GameStoreHub.Services.Data
 			return model;
 		}
 
+		public async Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId)
+		{
+			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+			IEnumerable<CheckoutItemViewModel> items = cart.OrderGames.Select(og => new CheckoutItemViewModel
+			{
+				GameId = og.GameId,
+				GameImagePath = og.Game.ImagePath,
+				GameTitle = og.Game.Title,
+				PriceAtPurchase = og.PriceAtPurchase
+			}).ToHashSet();
+
+			return items;
+		}
+
 		public async Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model)
 		{
 			try
 			{
 				Order currrentOrder = await GetOrCreateCartForUserByUserIdAsync(userId);
+				currrentOrder.TotalPrice = currrentOrder.OrderGames.Sum(og => og.PriceAtPurchase);
 				currrentOrder.OrderStatus = OrderStatus.Completed;
 				currrentOrder.OrderDate = DateTime.Now;
+				currrentOrder.Address = model.BillingData.Address;
+				currrentOrder.PhoneNumber = model.BillingData.PhoneNumber;
+				currrentOrder.City = model.BillingData.City;
+				currrentOrder.Country = model.BillingData.Country;
+				currrentOrder.ZipCode = model.BillingData.ZipCode;
 				OrderResult orderResult = new(currrentOrder.Id);
 				return orderResult;	
 			}

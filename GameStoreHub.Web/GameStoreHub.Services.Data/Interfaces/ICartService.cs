@@ -14,5 +14,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<ValidationResult> ValidateCartByUserIdAsync(string userId, IEnumerable<CheckoutItemViewModel> cartItems);
 
 		Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model);
+
+		Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId);
 	}
 }
