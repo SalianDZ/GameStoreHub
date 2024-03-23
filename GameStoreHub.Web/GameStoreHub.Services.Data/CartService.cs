@@ -5,6 +5,7 @@ using GameStoreHub.Data.Models.Enums;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Order;
 using GameStoreHub.Web.ViewModels.OrderGame;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Data
@@ -183,6 +184,23 @@ namespace GameStoreHub.Services.Data
 
 			validationResult.IsValid = !validationResult.Errors.Any();
 			return validationResult;
+		}
+
+		public async Task<IEnumerable<CheckoutItemViewModel>> GetCartItemsByUserIdAsync(string userId)
+		{
+			Order order = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+			IEnumerable<CheckoutItemViewModel> items =
+				order.OrderGames
+				.Select(og => new CheckoutItemViewModel
+				{
+					GameId = og.GameId,
+					GameImagePath = og.Game.ImagePath,
+					GameTitle = og.Game.Title,
+					PriceAtPurchase = og.PriceAtPurchase
+				}).ToList();
+
+			return items;
 		}
 	}
 }

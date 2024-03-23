@@ -2,6 +2,8 @@
 using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
+using GameStoreHub.Web.ViewModels.Order;
+using GameStoreHub.Web.ViewModels.OrderGame;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Data
@@ -12,7 +14,7 @@ namespace GameStoreHub.Services.Data
 
         public UserService(GameStoreDbContext dbContext)
         {
-            this.dbContext = dbContext;
+			this.dbContext = dbContext;
         }
 
 		public async Task<OperationResult> DeductBalanceByUserIdAsync(string userId, decimal price)

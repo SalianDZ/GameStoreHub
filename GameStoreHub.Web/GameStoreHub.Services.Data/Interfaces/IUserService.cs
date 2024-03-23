@@ -1,4 +1,6 @@
 ﻿using GameStoreHub.Common;
+using GameStoreHub.Web.ViewModels.Order;
+using GameStoreHub.Web.ViewModels.OrderGame;
 
 namespace GameStoreHub.Services.Data.Interfaces
 {

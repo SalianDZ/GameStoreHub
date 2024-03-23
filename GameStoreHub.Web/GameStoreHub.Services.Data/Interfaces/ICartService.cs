@@ -18,5 +18,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId);
 
 		Task<bool> AddItemToCart(string userId, string gameId);
+
+		Task<IEnumerable<CheckoutItemViewModel>> GetCartItemsByUserIdAsync(string userId);
 	}
 }
