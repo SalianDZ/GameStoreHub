@@ -157,8 +157,8 @@
 												<h5>SUBTOTAL: $@cartItems.Sum(ci => ci.PriceAtPurchase)</h5>
 											</div>
 											<div class="cart-btns">
-												<a href="#">View Cart</a>
-											<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+												<a asp-controller="Order" asp-action="Cart">View Cart</a>
+												<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 											</div>
 										}
 										else
@@ -171,7 +171,7 @@
 												<h5>SUBTOTAL: $0</h5>
 											</div>
 											<div class="cart-btns">
-												<a href="#">View Cart</a>
+												<a asp-controller="Order" asp-action="Cart">View Cart</a>
 												<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 											</div>
 										}

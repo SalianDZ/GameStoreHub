@@ -17,7 +17,14 @@ namespace GameStoreHub.Services.Data
 
 		public async Task<bool> DoesGameExistByIdAsync(string id)
 		{
-			bool result = await dbContext.Games.AnyAsync(g => g.IsActive && g.Id == Guid.Parse(id));
+			Guid idAsGuid;
+
+			if (!Guid.TryParse(id, out idAsGuid))
+			{
+				return false;
+			}
+
+			bool result = await dbContext.Games.AnyAsync(g => g.IsActive && g.Id == idAsGuid);
 			return result;
 		}
 

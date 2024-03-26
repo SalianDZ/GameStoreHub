@@ -1,4 +1,8 @@
 ﻿@model CheckoutViewModel
+@{
+    ViewData["PhoneNumber"] = "+359 89 000 0000";
+}
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="~/css/cart.css" />
 <div class="container">
@@ -7,7 +11,7 @@
             <div class="col-md-9">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <span class="pull-right">(<strong>5</strong>) items</span>
+                        <span class="pull-right">(<strong>@Model.Items.Count()</strong>) items</span>
                         <h5>Items in your cart</h5>
                     </div>
                     @if (Model.Items.Any())
@@ -39,7 +43,7 @@
                                                     <div class="m-t-sm">
                                                         <a href="#" class="text-muted"><i class="fa fa-gift"></i> Add gift package</a>
                                                         |
-                                                        <a href="#" class="text-muted"><i class="fa fa-trash"></i> Remove item</a>
+                                                        <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-id="@item.GameId" class="text-muted"><i class="fa fa-trash"></i> Remove item</a>
                                                     </div>
                                                 </td>
 
@@ -70,13 +74,14 @@
                     <div class="ibox-content">
                         @if (Model.Items.Any())
                         {
-                            <button class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i><a asp-controller="Order" asp-action="Checkout">Checkout</a></button>
+                            <a asp-controller="Order" asp-action="Checkout" class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout</a>
                         }
                         else
                         {
-                            <button class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i>Checkout</button>
+                            <button class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart" disabled></i> Checkout</button>
                         }
-                        <button class="btn btn-white"><i class="fa fa-arrow-left"></i><a asp-controller="Home" asp-action="Index">Continue shopping</a></button>
+
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-white"><i class="fa fa-arrow-left"></i> Continue shopping</a>
 
                     </div>
                 </div>
@@ -113,7 +118,7 @@
                         <h5>Support</h5>
                     </div>
                     <div class="ibox-content text-center">
-                        <h3><i class="fa fa-phone"></i> +43 100 783 001</h3>
+                        <h3><i class="fa fa-phone"></i> @ViewData["PhoneNumber"]</h3>
                         <span class="small">
                             Please contact with us if you have any questions. We are avalible 24h.
                         </span>

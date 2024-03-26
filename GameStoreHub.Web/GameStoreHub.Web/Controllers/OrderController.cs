@@ -5,6 +5,7 @@ using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GameStoreHub.Web.Controllers
 {
@@ -113,17 +114,51 @@ namespace GameStoreHub.Web.Controllers
 				return BadRequest("Select a valid game");
 			}
 
-			var userId = User.GetId();
-			// Ensure you have a method to get the current user's ID
-			var success = await cartService. AddItemToCart(userId, id);
+            if (await cartService.IsGameInCartByIdAsync(User.GetId(), id))
+            {
+                return BadRequest("Selected game is already in the cart!");
+            }
 
-			if (!success)
+            string userId = User.GetId();
+            OperationResult result = await cartService.AddItemToCart(userId, id);
+
+            if (!result.IsSuccess)
+            {
+                foreach (var error in result.Errors)
+                {
+                    return BadRequest(error);
+                }
+            }
+
+            return RedirectToAction("Cart", "Order");
+		}
+
+		[Authorize]
+		public async Task<IActionResult> RemoveFromCart(string id)
+		{
+            if (!await gameService.DoesGameExistByIdAsync(id))
+            {
+                return BadRequest("Select a valid game!");
+            }
+
+			if (!await cartService.IsGameInCartByIdAsync(User.GetId(), id))
 			{
-				return BadRequest("Could not add the game to the cart, it might already be there.");
+				return BadRequest("Selected game is already removed from the cart!");
 			}
 
-			return RedirectToAction("Checkout", "Order");
-		}
+            string userId = User.GetId();
+            OperationResult result = await cartService.RemoveItemFromCart(userId, id);
+
+			if (!result.IsSuccess)
+			{
+				foreach (var error in result.Errors)
+				{
+					return BadRequest(error);
+				}
+			}
+
+			return RedirectToAction("Cart", "Order");
+        }
 
 		[Authorize]
 		[HttpGet]

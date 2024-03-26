@@ -5,12 +5,11 @@ using GameStoreHub.Data.Models.Enums;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Order;
 using GameStoreHub.Web.ViewModels.OrderGame;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Data
 {
-	public class CartService : ICartService
+    public class CartService : ICartService
 	{
 		private readonly GameStoreDbContext dbContext;
 
@@ -57,33 +56,37 @@ namespace GameStoreHub.Services.Data
 			return cart;	
 		}
 
-		public async Task<bool> AddItemToCart(string userId, string gameId)
+		public async Task<OperationResult> AddItemToCart(string userId, string gameId)
 		{
-			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
-
-			// Check if the game is already in the cart
-			OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
-
-			if (existingItem != null)
+			OperationResult result = new();
+			try
 			{
-				// The game is already in the cart, so we prevent adding it again
-				// Log this event or handle as needed, e.g., return a message indicating the item is already in the cart
-				return false; // Indicate failure or that the operation is not allowed
+                Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+                // Check if the game is already in the cart
+                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+
+                // Since the game is not in the cart, proceed to add it
+                Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
+
+                OrderGame newItem = new OrderGame
+                {
+                    OrderId = cart.Id,
+                    GameId = Guid.Parse(gameId),
+                    PriceAtPurchase = game.Price,
+                    IsActive = true
+                };
+
+                dbContext.OrderGames.Add(newItem);
+                await dbContext.SaveChangesAsync();
+				result.SetSuccess();
+            }
+			catch (Exception)
+			{
+				result.AddError("An error occured while attempting to procced with the data!");
 			}
 
-			// Since the game is not in the cart, proceed to add it
-			Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
-			OrderGame newItem = new OrderGame
-			{
-				OrderId = cart.Id,
-				GameId = Guid.Parse(gameId),
-				PriceAtPurchase = game.Price,
-				IsActive = true
-			};
-
-			dbContext.OrderGames.Add(newItem);
-			await dbContext.SaveChangesAsync();
-			return true;
+			return result;
 		}
 
 		public async Task<CheckoutViewModel> GetCartViewModelByUserIdAsync(string userId)
@@ -202,5 +205,42 @@ namespace GameStoreHub.Services.Data
 
 			return items;
 		}
-	}
+
+        public async Task<bool> IsGameInCartByIdAsync(string userId, string gameId)
+        {
+            Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+            OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
+
+            if (existingItem != null)
+            {
+                return true;
+            }
+
+			return false;
+        }
+
+        public async Task<OperationResult> RemoveItemFromCart(string userId, string gameId)
+        {
+			OperationResult result = new();
+			try
+			{
+                Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+
+                dbContext.OrderGames.Remove(existingItem);
+
+                await dbContext.SaveChangesAsync();
+;
+				result.SetSuccess();
+            }
+			catch (Exception)
+			{
+				result.AddError("An error occured while attempting to procced with the data!");
+			}  
+			
+			return result;
+        }
+    }
 }
