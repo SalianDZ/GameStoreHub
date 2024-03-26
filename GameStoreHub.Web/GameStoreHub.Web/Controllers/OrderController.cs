@@ -105,7 +105,8 @@ namespace GameStoreHub.Web.Controllers
 			return View(model);
 		}
 
-		public async Task<IActionResult> AddToCart(string id)
+        [Authorize]
+        public async Task<IActionResult> AddToCart(string id)
 		{
 			if (!await gameService.DoesGameExistByIdAsync(id))
 			{
@@ -123,5 +124,14 @@ namespace GameStoreHub.Web.Controllers
 
 			return RedirectToAction("Checkout", "Order");
 		}
+
+		[Authorize]
+		[HttpGet]
+		public async Task<IActionResult> Cart()
+		{
+            string userId = User.GetId();
+            CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
+            return View(model);
+        }
 	}
 }
