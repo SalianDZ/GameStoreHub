@@ -1,5 +1,6 @@
 ﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
+using GameStoreHub.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStoreHub.Web.Controllers
@@ -26,7 +27,7 @@ namespace GameStoreHub.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id, ReviewFormModel? reviewForm)
         {
             bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
             if (id == null || !doesGameExist)

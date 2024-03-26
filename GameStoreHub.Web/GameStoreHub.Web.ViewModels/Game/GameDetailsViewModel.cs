@@ -2,8 +2,8 @@
 
 namespace GameStoreHub.Web.ViewModels.Game
 {
-	public class GameDetailsViewModel
-	{
+    public class GameDetailsViewModel
+    {
 
         public Guid Id { get; set; }
 
