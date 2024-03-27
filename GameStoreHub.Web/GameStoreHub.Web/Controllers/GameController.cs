@@ -1,4 +1,6 @@
-﻿using GameStoreHub.Services.Data.Interfaces;
+﻿using GameStoreHub.Common;
+using GameStoreHub.Services.Data.Interfaces;
+using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Game;
 using GameStoreHub.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +29,8 @@ namespace GameStoreHub.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Details(string id, ReviewFormModel? reviewForm)
+        [HttpGet]
+        public async Task<IActionResult> Details(string id)
         {
             bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
             if (id == null || !doesGameExist)
@@ -38,7 +41,46 @@ namespace GameStoreHub.Web.Controllers
             GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
             model.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
 
-            return View(model);
+            GameDetailsAndReviewFormViewModel detailsPageModel = new();
+            detailsPageModel.GameDetailsPage = model;
+            return View(detailsPageModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Details(string id, ReviewFormModel model)
+        {
+			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+			if (id == null || !doesGameExist)
+			{
+				return NotFound();
+			}
+
+			GameDetailsAndReviewFormViewModel detailsModel = new();
+			if (model != null)
+            {
+                if (model.Rating <= 0 || model.Rating >= 6)
+                {
+                    ModelState.AddModelError(nameof(model.Rating), "The rating must be between 1 and 5!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    detailsModel.ReviewForm = model;
+                    detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+                    return View(detailsModel);
+                }
+
+                string userId = User.GetId();
+                OperationResult databaseResult = await reviewService.AddReviewToGameByIdAsync(id, userId, model);
+
+				if (databaseResult.IsSuccess)
+                {
+                    return RedirectToAction("Details", "Game", id);
+                }
+            }
+
+			detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+			return View(detailsModel);
+		}
     }
 }

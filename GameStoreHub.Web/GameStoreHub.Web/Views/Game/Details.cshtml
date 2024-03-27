@@ -1,4 +1,4 @@
-﻿@model GameDetailsViewModel
+﻿@model GameDetailsAndReviewFormViewModel
 
 		<!-- NAVIGATION -->
 <nav id="navigation">
@@ -29,8 +29,8 @@
 				<ul class="breadcrumb-tree">
 					<li><a asp-controller="Home" asp-action="Index">Home</a></li>
 					<li><a asp-controller="Category" asp-action="All">Categories</a></li>
-					<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="@Model.CategoryId">@Model.Category</a></li>
-					<li class="active">@Model.Title</li>
+					<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="@Model.GameDetailsPage.CategoryId">@Model.GameDetailsPage.Category</a></li>
+					<li class="active">@Model.GameDetailsPage.Title</li>
 				</ul>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 			<div class="col-md-5 col-md-push-2">
 				<div id="product-main-img">
 					<div class="product-preview">
-						<img src="@Url.Content($"~/{Model.ImagePath}")" alt="">
+						<img src="@Url.Content($"~/{Model.GameDetailsPage.ImagePath}")" alt="">
 					</div>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 			<!-- Product details -->
 			<div class="col-md-5">
 				<div class="product-details">
-					<h2 class="product-name">@Model.Title</h2>
+					<h2 class="product-name">@Model.GameDetailsPage.Title</h2>
 					<div>
 						<div class="product-rating">
 							<i class="fa fa-star"></i>
@@ -70,17 +70,17 @@
 							<i class="fa fa-star"></i>
 							<i class="fa fa-star-o"></i>
 						</div>
-						<a class="review-link" href="#">@Model.Reviews.Count() Review(s) | Add your review</a>
+						<a class="review-link" href="#">@Model.GameDetailsPage.Reviews.Count() Review(s) | Add your review</a>
 					</div>
 					<div>
-						<h3 class="product-price">$@Model.Price <del class="product-old-price">$@Model.Price</del></h3>
+						<h3 class="product-price">$@Model.GameDetailsPage.Price <del class="product-old-price">$@Model.GameDetailsPage.Price</del></h3>
 						<span class="product-available">In Stock</span>
 					</div>
-					<p>Developer: @Model.Developer</p>
-					<p>Release Date: @Model.ReleaseDate</p>
+					<p>Developer: @Model.GameDetailsPage.Developer</p>
+					<p>Release Date: @Model.GameDetailsPage.ReleaseDate</p>
 
 					<div class="add-to-cart">
-						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a asp-controller="Order" asp-action="AddToCart" asp-route-id="@Model.Id">add to cart</a></button>
+						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a asp-controller="Order" asp-action="AddToCart" asp-route-id="@Model.GameDetailsPage.Id">add to cart</a></button>
 					</div>
 
 					<ul class="product-btns">
@@ -90,7 +90,7 @@
 
 					<ul class="product-links">
 						<li>Category:</li>
-						<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="@Model.CategoryId">@Model.Category</a></li>
+						<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="@Model.GameDetailsPage.CategoryId">@Model.GameDetailsPage.Category</a></li>
 					</ul>
 
 					<ul class="product-links">
@@ -111,7 +111,7 @@
 					<ul class="tab-nav">
 						<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
 						@* <li><a data-toggle="tab" href="#tab2">Details</a></li> *@
-						<li><a data-toggle="tab" href="#tab3">Reviews (@Model.Reviews.Count())</a></li>
+						<li><a data-toggle="tab" href="#tab3">Reviews (@Model.GameDetailsPage.Reviews.Count())</a></li>
 					</ul>
 					<!-- /product tab nav -->
 					<!-- product tab content -->
@@ -120,7 +120,7 @@
 						<div id="tab1" class="tab-pane fade in active">
 							<div class="row">
 								<div class="col-md-12">
-									<p class="text-center">@Model.Description</p>
+									<p class="text-center">@Model.GameDetailsPage.Description</p>
 								</div>
 							</div>
 						</div>
@@ -222,11 +222,11 @@
 								<!-- /Rating -->
 								<!-- Reviews -->
 								<div class="col-md-6">
-									@if (Model.Reviews.Any())
+									@if (Model.GameDetailsPage.Reviews.Any())
 									{
 										<div id="reviews">
 											<ul class="reviews">
-												@foreach (var review in Model.Reviews)
+												@foreach (var review in Model.GameDetailsPage.Reviews)
 												{
 													<li>
 														<div class="review-heading">
@@ -270,14 +270,14 @@
 											<div class="input-rating">
 												<span>Your Rating: </span>
 												<div class="stars">
-													<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
-													<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-													<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-													<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-													<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+													<input id="star5" name="rating" value="5" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star5"></label>
+													<input id="star4" name="rating" value="4" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star4"></label>
+													<input id="star3" name="rating" value="3" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star3"></label>
+													<input id="star2" name="rating" value="2" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star2"></label>
+													<input id="star1" name="rating" value="1" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star1"></label>
 												</div>
 											</div>
-											<textarea class="input" placeholder="Your Review"></textarea>
+											<textarea class="input" placeholder="Your Review" asp-for="@Model.ReviewForm.Comment"></textarea>
 											<button class="primary-btn">Submit</button>
 										</form>
 									</div>
