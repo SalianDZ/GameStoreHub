@@ -141,13 +141,23 @@
 								<div class="col-md-3">
 									<div id="rating">
 										<div class="rating-avg">
-											<span>4.5</span>
+											<span>@Model.GameDetailsPage.AverageRating().ToString("f2")</span>
 											<div class="rating-stars">
-												<i class="fa fa-star"></i>
-												<i class="fa fa-star"></i>
-												<i class="fa fa-star"></i>
-												<i class="fa fa-star"></i>
-												<i class="fa fa-star-o"></i>
+												@for (int star = 1; star <= 5; star++)
+												{
+													if (star <= Model.GameDetailsPage.AverageRating())
+													{
+														<i class="fa fa-star"></i> <!-- filled star icon -->
+													}
+													else if (star - Model.GameDetailsPage.AverageRating() < 1)
+													{
+														<i class="fa fa-star-half-o" style="color: #D10024"></i> <!-- half-filled star icon -->
+													}
+													else
+													{
+														<i class="fa fa-star-o"></i> <!-- empty star icon -->
+													}
+												}
 											</div>
 										</div>
 										<ul class="rating">
@@ -233,11 +243,14 @@
 															<h5 class="name">@review.Username</h5>
 															<p class="date">@review.DateCreated</p>
 															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
+																@for (int i = 0; i < review.Rating; i++)
+																{
+																	<i class="fa fa-star"></i>
+																}
+																@for (int i = 0; i < 5-review.Rating; i++)
+																{
+																	<i class="fa fa-star-o empty"></i>
+																}																
 															</div>
 														</div>
 														<div class="review-body">
@@ -264,11 +277,13 @@
 								<!-- Review Form -->
 								<div class="col-md-3">
 									<div id="review-form">
+										@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 										<form class="review-form" method="post">
 @* 											<input class="input" type="text" placeholder="Your Name">
 											<input class="input" type="email" placeholder="Your Email"> *@
 											<div class="input-rating">
 												<span>Your Rating: </span>
+												<span asp-validation-for="@Model.ReviewForm.Rating" class="text-danger"></span>
 												<div class="stars">
 													<input id="star5" name="rating" value="5" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star5"></label>
 													<input id="star4" name="rating" value="4" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star4"></label>
@@ -277,8 +292,9 @@
 													<input id="star1" name="rating" value="1" type="radio" asp-for="@Model.ReviewForm.Rating"><label for="star1"></label>
 												</div>
 											</div>
-											<textarea class="input" placeholder="Your Review" asp-for="@Model.ReviewForm.Comment"></textarea>
-											<button class="primary-btn">Submit</button>
+											<span asp-validation-for="@Model.ReviewForm.Comment" class="text-danger"></span>
+											<textarea class="input" name="Comment" placeholder="Your Review" asp-for="@Model.ReviewForm.Comment"></textarea>
+											<button class="primary-btn" type="submit">Submit</button>
 										</form>
 									</div>
 								</div>

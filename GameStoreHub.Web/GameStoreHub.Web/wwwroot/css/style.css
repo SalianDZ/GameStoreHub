@@ -1481,9 +1481,12 @@ textarea.input {
   color: #E4E7ED;
 }
 
-.product-details .product-rating>i.fa-star {
-  color: #D10024;
-}
+    .product-details .product-rating > i.fa-star,
+    .product-details .product-rating > i.fa-star-half-o, /* Assuming this is your half-star class */
+    .product-details .product-rating > i.fa-star-half-alt {
+        color: #D10024;
+    }
+
 
 .product-details .review-link {
   font-size: 12px;

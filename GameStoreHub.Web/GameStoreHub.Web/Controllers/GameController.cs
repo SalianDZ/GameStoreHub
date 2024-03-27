@@ -3,6 +3,7 @@ using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Game;
 using GameStoreHub.Web.ViewModels.Review;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStoreHub.Web.Controllers
@@ -47,6 +48,7 @@ namespace GameStoreHub.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Details(string id, ReviewFormModel model)
         {
 			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
@@ -62,6 +64,11 @@ namespace GameStoreHub.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(model.Rating), "The rating must be between 1 and 5!");
                 }
+
+                if (model.Comment != null && model.Comment.Length > 100)
+                {
+					ModelState.AddModelError(nameof(model.Comment), "The comment must be between consist of maximum 100 characters!");
+				}
 
                 if (!ModelState.IsValid)
                 {
@@ -80,6 +87,7 @@ namespace GameStoreHub.Web.Controllers
             }
 
 			detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+            detailsModel.GameDetailsPage.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
 			return View(detailsModel);
 		}
     }

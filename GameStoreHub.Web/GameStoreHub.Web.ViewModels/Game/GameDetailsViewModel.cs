@@ -23,6 +23,18 @@ namespace GameStoreHub.Web.ViewModels.Game
 
         public int CategoryId { get; set; }
 
-        public IEnumerable<ReviewViewModel> Reviews { get; set; } = new HashSet<ReviewViewModel>();
+		public IEnumerable<ReviewViewModel> Reviews { get; set; } = new HashSet<ReviewViewModel>();
+
+        public double AverageRating()
+        {
+            if (Reviews.Any())
+            {
+                return Reviews.Average(r => r.Rating);
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }
