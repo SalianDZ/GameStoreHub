@@ -70,7 +70,7 @@
 							<i class="fa fa-star"></i>
 							<i class="fa fa-star-o"></i>
 						</div>
-						<a class="review-link" href="#">@Model.GameDetailsPage.Reviews.Count() Review(s) | Add your review</a>
+						<a class="review-link">@Model.GameDetailsPage.Reviews.Count() Review(s) | Add your review</a>
 					</div>
 					<div>
 						<h3 class="product-price">$@Model.GameDetailsPage.Price <del class="product-old-price">$@Model.GameDetailsPage.Price</del></h3>
@@ -125,15 +125,6 @@
 							</div>
 						</div>
 						<!-- /tab1  -->
-						<!-- tab2  -->
-						@* <div id="tab2" class="tab-pane fade in">
-							<div class="row">
-								<div class="col-md-12">
-									<p>@Model.Description</p>
-								</div>
-							</div>
-						</div> *@
-						<!-- /tab2  -->
 						<!-- tab3  -->
 						<div id="tab3" class="tab-pane fade in">
 							<div class="row">
@@ -161,71 +152,36 @@
 											</div>
 										</div>
 										<ul class="rating">
-											<li>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-												</div>
-												<div class="rating-progress">
-													<div style="width: 80%;"></div>
-												</div>
-												<span class="sum">3</span>
-											</li>
-											<li>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-												<div class="rating-progress">
-													<div style="width: 60%;"></div>
-												</div>
-												<span class="sum">2</span>
-											</li>
-											<li>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-												<div class="rating-progress">
-													<div></div>
-												</div>
-												<span class="sum">0</span>
-											</li>
-											<li>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-												<div class="rating-progress">
-													<div></div>
-												</div>
-												<span class="sum">0</span>
-											</li>
-											<li>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-												<div class="rating-progress">
-													<div></div>
-												</div>
-												<span class="sum">0</span>
-											</li>
+											@for (int i = 5 ; i >= 1; i--)
+											{
+												<li>
+													<div class="rating-stars">
+														@for (int j = 1; j <= i; j++)
+														{
+															<i class="fa fa-star"></i>
+														}
+
+														@if (i != 5)
+														{
+															@for (int z = 1; z <= 5 - i; z++)
+															{
+																<i class="fa fa-star-o"></i>
+															}
+														}
+													</div>
+													<div class="rating-progress">
+														@if (Model.GameDetailsPage.Reviews.Any())
+														{
+															<div style="width: @(Model.GameDetailsPage.GetReviewCountByRating(i) * 100 / Model.GameDetailsPage.Reviews.Count())%;"></div>
+														}
+														else
+														{
+															<div></div>
+														}
+													</div>
+													<span class="sum">@Model.GameDetailsPage.GetReviewCountByRating(i)</span>
+												</li>
+											}
 										</ul>
 									</div>
 								</div>

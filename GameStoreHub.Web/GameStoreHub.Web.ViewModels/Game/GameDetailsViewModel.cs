@@ -36,5 +36,12 @@ namespace GameStoreHub.Web.ViewModels.Game
                 return 0;
             }
         }
-    }
+
+        public int GetReviewCountByRating(int starRating)
+        {
+            int count = Reviews.Where(r => r.Rating == starRating).Count();
+            return count;
+        }
+
+	}
 }
