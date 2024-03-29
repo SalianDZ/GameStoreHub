@@ -112,19 +112,68 @@
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
 								<!-- Wishlist -->
-								<div>
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>Your Wishlist</span>
-										<div class="qty">2</div>
-									</a>
+							<div class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+									<i class="fa fa-heart-o"></i>
+									<span>Wishlist</span>
+									<div class="qty">@cartItems.Count()</div>
+								</a>
+								<div class="cart-dropdown">
+									@if (User.Identity.IsAuthenticated)
+									{
+										@if (!cartItems.Any())
+										{
+											<h5 class="text-center">No added items into your wishlist!</h5>
+										}
+										else
+										{
+											<div class="cart-list">
+												@foreach (var cartItem in cartItems)
+												{
+													<div class="product-widget">
+														<div class="product-img">
+															<img src="@Url.Content($"~/{cartItem.GameImagePath}")" alt="">
+														</div>
+														<div class="product-body">
+															<h3 class="product-name"><a href="#">@cartItem.GameTitle</a></h3>
+															<h4 class="product-price">$@cartItem.PriceAtPurchase</h4>
+														</div>
+														<a class="delete" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>
+													</div>
+												}
+											</div>
+										}
+										<div class="cart-summary">
+											<small>@cartItems.Count() Item(s) selected</small>
+											<h5>SUBTOTAL: $@cartItems.Sum(ci => ci.PriceAtPurchase)</h5>
+										</div>
+										<div class="cart-btns">
+											<a asp-controller="Order" asp-action="Cart">View Cart</a>
+											<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+										</div>
+									}
+									else
+									{
+										<div class="cart-list">
+											<h5 class="text-center">No added items into your wishlist!</h5>
+										</div>
+										<div class="cart-summary">
+											<small>0 Item(s) selected</small>
+											<h5>SUBTOTAL: $0</h5>
+										</div>
+										<div class="cart-btns">
+											<a asp-controller="Order" asp-action="Cart">View Cart</a>
+											<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+										</div>
+									}
 								</div>
+							</div>
 								<!-- /Wishlist -->
 								<!-- Cart -->
 								<div class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 										<i class="fa fa-shopping-cart"></i>
-										<span>Your Cart</span>
+										<span>Cart</span>
 										<div class="qty">@cartItems.Count()</div>
 									</a>
 									<div class="cart-dropdown">
@@ -132,7 +181,7 @@
 										{
 											@if (!cartItems.Any())
 											{
-												<h3>No added items in the cart!</h3>
+												<h5 class="text-center">No added items into your cart!</h5>
 											}
 											else
 											{
@@ -147,7 +196,7 @@
 																<h3 class="product-name"><a href="#">@cartItem.GameTitle</a></h3>
 																<h4 class="product-price">$@cartItem.PriceAtPurchase</h4>
 															</div>
-															<button class="delete"><i class="fa fa-close"></i></button>
+														<a class="delete" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>
 														</div>
 													}
 												</div>
@@ -164,7 +213,7 @@
 										else
 										{
 											<div class="cart-list">
-												<h3>No items in the cart</h3>
+												<h3>No added items into your cart</h3>
 											</div>
 											<div class="cart-summary">
 												<small>0 Item(s) selected</small>

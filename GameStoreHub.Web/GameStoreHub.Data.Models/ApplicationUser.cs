@@ -22,7 +22,11 @@ namespace GameStoreHub.Data.Models
         [Required]  
         public decimal WalletBalance { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+		public Guid WishlistId { get; set; }
+
+        public virtual Wishlist Wishlist { get; set; } = null!;
+
+		public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
 
         public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }

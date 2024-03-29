@@ -161,6 +161,33 @@ namespace GameStoreHub.Web.Controllers
         }
 
 		[Authorize]
+		public async Task<IActionResult> RemoveFromIndexCart(string id)
+		{
+			if (!await gameService.DoesGameExistByIdAsync(id))
+			{
+				return BadRequest("Select a valid game!");
+			}
+
+			if (!await cartService.IsGameInCartByIdAsync(User.GetId(), id))
+			{
+				return BadRequest("Selected game is already removed from the cart!");
+			}
+
+			string userId = User.GetId();
+			OperationResult result = await cartService.RemoveItemFromCart(userId, id);
+
+			if (!result.IsSuccess)
+			{
+				foreach (var error in result.Errors)
+				{
+					return BadRequest(error);
+				}
+			}
+
+			return RedirectToAction("Index", "Home");
+		}
+
+		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> Cart()
 		{

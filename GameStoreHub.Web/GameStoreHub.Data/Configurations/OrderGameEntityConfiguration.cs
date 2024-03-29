@@ -12,11 +12,11 @@ namespace GameStoreHub.Data.Configurations
                 .HasOne(og => og.Order)
                 .WithMany(o => o.OrderGames)
                 .HasForeignKey(og => og.OrderId)
-                .OnDelete(DeleteBehavior.Restrict); // or another behavior as needed
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(og => og.Game)
-                .WithMany(g => g.OrderGames) // Assuming Game doesn't have a navigation property back to OrderGame
+                .WithMany(g => g.OrderGames)
                 .HasForeignKey(og => og.GameId)
                 .OnDelete(DeleteBehavior.Restrict);
 

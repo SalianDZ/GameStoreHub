@@ -49,5 +49,7 @@ namespace GameStoreHub.Data.Models
         public virtual ICollection<OrderGame> OrderGames { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
-    }
+
+		public virtual ICollection<WishlistItem> WishlistItems { get; set; }
+	}
 }
