@@ -15,13 +15,13 @@ namespace GameStoreHub.Data.Configurations
 				.HasOne(og => og.Wishlist)
 				.WithMany(o => o.WishlistItems)
 				.HasForeignKey(og => og.WishlistId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder
 				.HasOne(og => og.Game)
-				.WithMany(g => g.)
+				.WithMany(g => g.WishlistItems)
 				.HasForeignKey(og => og.GameId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }

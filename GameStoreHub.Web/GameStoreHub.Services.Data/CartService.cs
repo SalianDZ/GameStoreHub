@@ -64,7 +64,12 @@ namespace GameStoreHub.Services.Data
                 Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
                 // Check if the game is already in the cart
-                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+                OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
+
+				if (existingItem != null) 
+				{
+					result.AddError("The game is already added!");
+				}
 
                 // Since the game is not in the cart, proceed to add it
                 Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));

@@ -4,6 +4,7 @@ using GameStoreHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStoreHub.Data.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240330233403_ChangedDeletingOrderToCascadeDelete")]
+    partial class ChangedDeletingOrderToCascadeDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +214,7 @@ namespace GameStoreHub.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1a5e1603-dfc7-407d-9dd9-7ef77492bc31"),
+                            Id = new Guid("f0fb024a-dd77-4022-9dd6-1b6e2eaf5ca5"),
                             CategoryId = 3,
                             Description = "Embark on a cosmic journey across the universe, unraveling the mysteries of the stars.",
                             Developer = "Celestial Studios",
@@ -224,7 +226,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("76e9c3d2-a892-47c1-869e-ac6102c71f8a"),
+                            Id = new Guid("97726015-ffa3-4f96-9bfd-122c042b105d"),
                             CategoryId = 4,
                             Description = "Solve puzzles and battle mythical creatures to uncover ancient treasures.",
                             Developer = "Labyrinth Games",
@@ -236,7 +238,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7b1b5210-4c4f-4bfc-9e00-ee36530df0a2"),
+                            Id = new Guid("4855f66f-3e8c-475e-a4d9-1b924ed4c302"),
                             CategoryId = 2,
                             Description = "Command your armies in epic battles to conquer new lands and expand your empire.",
                             Developer = "Strategem Interactive",
@@ -248,7 +250,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1ae016d3-4860-404d-b065-ffa86f11ccbd"),
+                            Id = new Guid("15850bb2-7e5c-4237-9dd5-102b3004683a"),
                             CategoryId = 5,
                             Description = "Race at breakneck speeds through city streets and winding country roads to become the ultimate champion.",
                             Developer = "Adrenaline Motorsports",
@@ -260,7 +262,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a75b04f2-41c4-4ca0-99c1-0231ff005349"),
+                            Id = new Guid("a5592dee-0b7a-4a9d-ac21-57fe35762521"),
                             CategoryId = 1,
                             Description = "Master martial arts and engage in fierce battles to defeat the shadow syndicate and save the world.",
                             Developer = "Combat Core Studios",
@@ -590,7 +592,7 @@ namespace GameStoreHub.Data.Migrations
                     b.HasOne("GameStoreHub.Data.Models.Order", "Order")
                         .WithMany("OrderGames")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Game");

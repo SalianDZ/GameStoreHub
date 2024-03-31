@@ -12,8 +12,9 @@ namespace GameStoreHub.Data.Configurations
                 .HasOne(og => og.Order)
                 .WithMany(o => o.OrderGames)
                 .HasForeignKey(og => og.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
+            
             builder
                 .HasOne(og => og.Game)
                 .WithMany(g => g.OrderGames)

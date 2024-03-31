@@ -1,6 +1,7 @@
 ﻿using GameStoreHub.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace GameStoreHub.Data.Configurations
 {
@@ -12,7 +13,12 @@ namespace GameStoreHub.Data.Configurations
 			.HasMany(o => o.WishlistItems)
 			.WithOne(og => og.Wishlist)
 			.HasForeignKey(og => og.WishlistId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
+
+			builder
+		   .HasOne(w => w.User)
+		   .WithOne(u => u.Wishlist)
+		   .HasForeignKey<Wishlist>(w => w.UserId);
 		}
 	}
 }
