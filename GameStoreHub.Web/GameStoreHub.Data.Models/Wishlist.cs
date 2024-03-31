@@ -5,7 +5,7 @@
         public Wishlist()
         {
             Id = Guid.NewGuid();
-            WishlistItems = new HashSet<WishlistItem>();    
+            WishlistItems = new HashSet<WishlistItem>();
         }
 
         public Guid Id { get; set; }

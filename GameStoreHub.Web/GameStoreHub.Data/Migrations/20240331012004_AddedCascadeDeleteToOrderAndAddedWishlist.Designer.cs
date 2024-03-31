@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStoreHub.Data.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    [Migration("20240331003632_AddedCascadeDeleteToOrderAndAddedWishlist")]
+    [Migration("20240331012004_AddedCascadeDeleteToOrderAndAddedWishlist")]
     partial class AddedCascadeDeleteToOrderAndAddedWishlist
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,7 +214,7 @@ namespace GameStoreHub.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1a5e1603-dfc7-407d-9dd9-7ef77492bc31"),
+                            Id = new Guid("3542c6ad-9a41-4104-9007-956023b2bc2c"),
                             CategoryId = 3,
                             Description = "Embark on a cosmic journey across the universe, unraveling the mysteries of the stars.",
                             Developer = "Celestial Studios",
@@ -226,7 +226,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("76e9c3d2-a892-47c1-869e-ac6102c71f8a"),
+                            Id = new Guid("a26810d3-1158-4ab8-9f6f-0f870f660ce7"),
                             CategoryId = 4,
                             Description = "Solve puzzles and battle mythical creatures to uncover ancient treasures.",
                             Developer = "Labyrinth Games",
@@ -238,7 +238,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7b1b5210-4c4f-4bfc-9e00-ee36530df0a2"),
+                            Id = new Guid("ddeb2a06-f35f-46eb-b0c1-d1530f4fe460"),
                             CategoryId = 2,
                             Description = "Command your armies in epic battles to conquer new lands and expand your empire.",
                             Developer = "Strategem Interactive",
@@ -250,7 +250,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1ae016d3-4860-404d-b065-ffa86f11ccbd"),
+                            Id = new Guid("791e45f5-980b-4521-8ebc-2f6f828e686f"),
                             CategoryId = 5,
                             Description = "Race at breakneck speeds through city streets and winding country roads to become the ultimate champion.",
                             Developer = "Adrenaline Motorsports",
@@ -262,7 +262,7 @@ namespace GameStoreHub.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a75b04f2-41c4-4ca0-99c1-0231ff005349"),
+                            Id = new Guid("45b38bb7-0694-4499-9852-29f4481c9925"),
                             CategoryId = 1,
                             Description = "Master martial arts and engage in fierce battles to defeat the shadow syndicate and save the world.",
                             Developer = "Combat Core Studios",
@@ -403,7 +403,7 @@ namespace GameStoreHub.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlist");
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("GameStoreHub.Data.Models.WishlistItem", b =>
@@ -421,7 +421,7 @@ namespace GameStoreHub.Data.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("WishlistItem");
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
