@@ -231,10 +231,16 @@ namespace GameStoreHub.Services.Data
 			try
 			{
                 Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+				
+				// Check if a user tries to remove a game which is not in the cart
+				OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
 
-                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+				if (existingItem == null)
+				{
+					result.AddError("You are trying to remove a game which is not into your cart!");
+				}
 
-                dbContext.OrderGames.Remove(existingItem);
+                dbContext.OrderGames.Remove(existingItem!);
 
                 await dbContext.SaveChangesAsync();
 ;

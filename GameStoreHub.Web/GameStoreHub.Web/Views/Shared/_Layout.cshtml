@@ -5,16 +5,19 @@
 	ViewData["AboutUs"] = "Gamefinity: Your portal to a universe of curated video games, spanning classics to new releases.";
 	@inject IUserService userService
 	@inject ICartService cartService
+	@inject IWishlistService wishlistService
 
-	string fullName = await userService.GetFullNameByEmailAsync(User.Identity.Name);
+	string? fullName = await userService.GetFullNameByEmailAsync(User.Identity!.Name!);
 
 	IEnumerable<CheckoutItemViewModel> cartItems = new List<CheckoutItemViewModel>();
+	IEnumerable<WishlistItemViewModel> wishlistItems = new List<WishlistItemViewModel>();
 	string userId;
 
 	if (User.Identity.IsAuthenticated)
 	{
 		userId = User.GetId();
-		cartItems = await cartService.GetCartItemsByUserIdAsync(userId);		
+		cartItems = await cartService.GetCartItemsByUserIdAsync(userId);
+		wishlistItems = await wishlistService.GetWishlistItemsByUserIdAsync(userId);
 	}
 }
 
@@ -116,40 +119,39 @@
 								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 									<i class="fa fa-heart-o"></i>
 									<span>Wishlist</span>
-									<div class="qty">@cartItems.Count()</div>
+									<div class="qty">@wishlistItems.Count()</div>
 								</a>
 								<div class="cart-dropdown">
 									@if (User.Identity.IsAuthenticated)
 									{
-										@if (!cartItems.Any())
+										@if (!wishlistItems.Any())
 										{
 											<h5 class="text-center">No added items into your wishlist!</h5>
 										}
 										else
 										{
 											<div class="cart-list">
-												@foreach (var cartItem in cartItems)
+												@foreach (var wishlistItem in wishlistItems)
 												{
 													<div class="product-widget">
 														<div class="product-img">
-															<img src="@Url.Content($"~/{cartItem.GameImagePath}")" alt="">
+															<img src="@Url.Content($"~/{wishlistItem.GameImagePath}")" alt="">
 														</div>
 														<div class="product-body">
-															<h3 class="product-name"><a href="#">@cartItem.GameTitle</a></h3>
-															<h4 class="product-price">$@cartItem.PriceAtPurchase</h4>
+															<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@wishlistItem.GameId">@wishlistItem.GameTitle</a></h3>
+															<a class="btn btn-primary btn-sm" asp-controller="Order" asp-action="AddToCart" asp-route-id="@wishlistItem.GameId">Add item to cart</a>
 														</div>
-														<a class="delete" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>
+														<a class="delete" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@wishlistItem.GameId"><i class="fa fa-close"></i></a>
 													</div>
 												}
 											</div>
 										}
-										<div class="cart-summary">
-											<small>@cartItems.Count() Item(s) selected</small>
+										@* <div class="cart-summary">
+											<small>@wishlistItems.Count() Item(s) selected</small>
 											<h5>SUBTOTAL: $@cartItems.Sum(ci => ci.PriceAtPurchase)</h5>
-										</div>
-										<div class="cart-btns">
+										</div> *@
+										<div class="cart-btns text-center">
 											<a asp-controller="Order" asp-action="Cart">View Cart</a>
-											<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									}
 									else
@@ -163,7 +165,6 @@
 										</div>
 										<div class="cart-btns">
 											<a asp-controller="Order" asp-action="Cart">View Cart</a>
-											<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									}
 								</div>
@@ -213,7 +214,7 @@
 										else
 										{
 											<div class="cart-list">
-												<h3>No added items into your cart</h3>
+												<h5>No added items into your cart</h5>
 											</div>
 											<div class="cart-summary">
 												<small>0 Item(s) selected</small>
