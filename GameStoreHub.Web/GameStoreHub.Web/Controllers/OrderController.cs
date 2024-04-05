@@ -87,17 +87,14 @@ namespace GameStoreHub.Web.Controllers
 
 				if (result.IsSuccess)
 				{
-					//TODO!!!!
-					//await gameService.AssignActivationCodesToUserByUserIdAsync(userId, orderResult.OrderId);
-
-					// Redirect to an order confirmation page or order details page
+					await cartService.AssignActivationCodesToUserOrderByUserIdAsync(userId);
 
 					//TODO!!!
 					//return RedirectToAction("OrderConfirmation", new { orderId = orderResult.OrderId });
 					return Ok();
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				// Log the exception
 				ModelState.AddModelError("", "An unexpected error occurred while processing your order. Please try again.");

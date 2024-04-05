@@ -14,13 +14,13 @@ namespace GameStoreHub.Services.Data
 		private readonly GameStoreDbContext dbContext;
 
 		private readonly IGameService gameService;
-		private readonly IUserService userService;
+		//private readonly IUserService userService;
 
         public CartService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
         {
             this.dbContext = dbContext;
 			this.gameService = gameService;
-			this.userService = userService;
+			//this.userService = userService;
         }
 
 		public async Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId)
@@ -63,13 +63,7 @@ namespace GameStoreHub.Services.Data
 			{
                 Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-                // Check if the game is already in the cart
-                OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
-
-				if (existingItem != null) 
-				{
-					result.AddError("The game is already added!");
-				}
+                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
 
                 // Since the game is not in the cart, proceed to add it
                 Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
@@ -86,6 +80,29 @@ namespace GameStoreHub.Services.Data
                 await dbContext.SaveChangesAsync();
 				result.SetSuccess();
             }
+			catch (Exception)
+			{
+				result.AddError("An error occured while attempting to procced with the data!");
+			}
+
+			return result;
+		}
+
+		public async Task<OperationResult> RemoveItemFromCart(string userId, string gameId)
+		{
+			OperationResult result = new();
+			try
+			{
+				Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+				OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+
+				dbContext.OrderGames.Remove(existingItem!);
+
+				await dbContext.SaveChangesAsync();
+
+				result.SetSuccess();
+			}
 			catch (Exception)
 			{
 				result.AddError("An error occured while attempting to procced with the data!");
@@ -157,6 +174,29 @@ namespace GameStoreHub.Services.Data
 
 		}
 
+		public async Task<OperationResult> AssignActivationCodesToUserOrderByUserIdAsync(string userId)
+		{
+			OperationResult result = new();
+			try
+			{
+				Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+				foreach (var orderGame in cart.OrderGames)
+				{
+					orderGame.GameKey = GenerateActivationKeyForGame();
+				}
+
+				await dbContext.SaveChangesAsync();
+
+				result.SetSuccess();
+			}
+			catch (Exception)
+			{
+				result.AddError("An error occured while attempting to procced with the data!");
+			}
+
+			return result;
+		}
 		//Validation method below this comment!
 		//                |
 		//                V
@@ -225,33 +265,9 @@ namespace GameStoreHub.Services.Data
 			return false;
         }
 
-        public async Task<OperationResult> RemoveItemFromCart(string userId, string gameId)
-        {
-			OperationResult result = new();
-			try
-			{
-                Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
-				
-				// Check if a user tries to remove a game which is not in the cart
-				OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
-
-				if (existingItem == null)
-				{
-					result.AddError("You are trying to remove a game which is not into your cart!");
-				}
-
-                dbContext.OrderGames.Remove(existingItem!);
-
-                await dbContext.SaveChangesAsync();
-;
-				result.SetSuccess();
-            }
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-			}  
-			
-			return result;
-        }
+		private static string GenerateActivationKeyForGame()
+		{
+			return Guid.NewGuid().ToString();
+		}
     }
 }

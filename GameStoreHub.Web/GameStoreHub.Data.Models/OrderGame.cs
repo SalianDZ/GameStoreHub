@@ -30,5 +30,7 @@ namespace GameStoreHub.Data.Models
         public decimal PriceAtPurchase { get; set; }
 
         public bool IsActive {get; set; }
+
+        public string? GameKey { get; set; }
     }
 }
