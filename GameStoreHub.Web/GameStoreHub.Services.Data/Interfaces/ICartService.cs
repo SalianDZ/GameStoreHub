@@ -26,5 +26,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<bool> IsGameInCartByIdAsync(string userId, string gameId);
 
 		Task<OperationResult> AssignActivationCodesToUserOrderByUserIdAsync(string userId);
+
+		Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId);
 	}
 }

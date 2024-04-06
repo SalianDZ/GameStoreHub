@@ -63,7 +63,7 @@ namespace GameStoreHub.Services.Data
 			{
                 Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-                OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+                //OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
 
                 // Since the game is not in the cart, proceed to add it
                 Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
@@ -144,6 +144,31 @@ namespace GameStoreHub.Services.Data
 			}).ToHashSet();
 
 			return items;
+		}
+
+		public async Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId)
+		{
+			IEnumerable<Order> allCarts = await dbContext.Orders
+				.Include(o => o.OrderGames)
+				.ThenInclude(og => og.Game)
+				.Where(o => o.OrderStatus == OrderStatus.Completed && o.UserId == Guid.Parse(userId)).ToArrayAsync();
+			List<CheckoutItemViewModel> allPurchasedGames = new List<CheckoutItemViewModel>();
+			foreach (var cart in allCarts)
+			{
+				foreach (var game in cart.OrderGames)
+				{
+					CheckoutItemViewModel currentGame = new()
+					{
+						GameId = game.GameId,
+						GameImagePath = game.Game.ImagePath,
+						GameTitle = game.Game.Title,
+						PriceAtPurchase = game.PriceAtPurchase
+					};
+					allPurchasedGames.Add(currentGame);
+				}
+			}
+
+			return allPurchasedGames;
 		}
 
 		public async Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model)

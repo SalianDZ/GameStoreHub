@@ -2,6 +2,7 @@
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Game;
+using GameStoreHub.Web.ViewModels.OrderGame;
 using GameStoreHub.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +13,27 @@ namespace GameStoreHub.Web.Controllers
     {
         private readonly IGameService gameService;
         private readonly IReviewService reviewService;
+        private readonly ICartService cartService;
 
-        public GameController(IGameService gameService, IReviewService reviewService)
+        public GameController(IGameService gameService, IReviewService reviewService, ICartService cartService)
         {
             this.gameService = gameService;
             this.reviewService = reviewService;
+            this.cartService = cartService;
         }
             
         public IActionResult All()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> OwnedGames()
+        {
+            string userId = User.GetId();
+            IEnumerable<CheckoutItemViewModel> purchasedItems = await cartService.GetPurchasedItemsByUserIdAsync(userId);
+            return View(purchasedItems);
         }
 
         public async Task<IActionResult> GamesByCategory(int id)

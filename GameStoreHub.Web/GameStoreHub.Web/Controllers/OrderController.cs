@@ -116,6 +116,8 @@ namespace GameStoreHub.Web.Controllers
                 return BadRequest("Selected game is already in the cart!");
             }
 
+			//TODO!!!
+			//Here we need to make a check if the game is alreadu purchased before!!!
             string userId = User.GetId();
             OperationResult result = await cartService.AddItemToCart(userId, id);
 
