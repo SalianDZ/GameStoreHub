@@ -30,5 +30,6 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId);
 
 		Task<bool> IsGameAlreadyBoughtBefore(string userId, string gameId);
+		Task<string> GetActivationCodeByUserAndGameIdAsync(string userId, string gameId);
 	}
 }

@@ -139,6 +139,7 @@
 														</div>
 														<div class="product-body">
 															<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@wishlistItem.GameId">@wishlistItem.GameTitle</a></h3>
+															<h3 class="product-price">$@wishlistItem.PriceAtPurchase</h3>
 															<a class="btn btn-primary btn-sm" asp-controller="Order" asp-action="AddToCart" asp-route-id="@wishlistItem.GameId">Add item to cart</a>
 														</div>
 														<a class="delete" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@wishlistItem.GameId"><i class="fa fa-close"></i></a>
@@ -146,10 +147,6 @@
 												}
 											</div>
 										}
-										@* <div class="cart-summary">
-											<small>@wishlistItems.Count() Item(s) selected</small>
-											<h5>SUBTOTAL: $@cartItems.Sum(ci => ci.PriceAtPurchase)</h5>
-										</div> *@
 										<div class="cart-btns text-center">
 											<a asp-controller="Order" asp-action="Cart">View Cart</a>
 										</div>
@@ -162,9 +159,6 @@
 										<div class="cart-summary">
 											<small>0 Item(s) selected</small>
 											<h5>SUBTOTAL: $0</h5>
-										</div>
-										<div class="cart-btns">
-											<a asp-controller="Order" asp-action="Cart">View Cart</a>
 										</div>
 									}
 								</div>
@@ -194,7 +188,7 @@
 																<img src="@Url.Content($"~/{cartItem.GameImagePath}")" alt="">
 															</div>
 															<div class="product-body">
-																<h3 class="product-name"><a href="#">@cartItem.GameTitle</a></h3>
+																<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@cartItem.GameId">@cartItem.GameTitle</a></h3>
 																<h4 class="product-price">$@cartItem.PriceAtPurchase</h4>
 															</div>
 														<a class="delete" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>

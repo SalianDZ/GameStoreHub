@@ -103,7 +103,8 @@ namespace GameStoreHub.Services.Data
 				{
 					GameId = og.GameId,
 					GameImagePath = og.Game.ImagePath,
-					GameTitle = og.Game.Title
+					GameTitle = og.Game.Title,
+					PriceAtPurchase = og.Game.Price
 				}).ToList();
 
 			return items;

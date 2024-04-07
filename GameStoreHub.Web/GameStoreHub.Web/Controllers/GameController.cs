@@ -36,6 +36,17 @@ namespace GameStoreHub.Web.Controllers
             return View(purchasedItems);
         }
 
+        public async Task<IActionResult> GetActivationCode(string id)
+        {
+            string userId = User.GetId();
+            if (!await cartService.IsGameAlreadyBoughtBefore(userId, id))
+            {
+                return BadRequest("You do not have access to this game!");
+            }
+            string actCode = await cartService.GetActivationCodeByUserAndGameIdAsync(userId, id);
+            return Ok(actCode);
+        }
+
         public async Task<IActionResult> GamesByCategory(int id)
         {
             IEnumerable<GamesViewModel> model = await gameService.GetAllGamesFromCategoryByCategoryIdAsync(id);

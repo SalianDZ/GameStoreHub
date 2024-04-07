@@ -111,6 +111,13 @@ namespace GameStoreHub.Services.Data
 			return result;
 		}
 
+		public async Task<string> GetActivationCodeByUserAndGameIdAsync(string userId, string gameId)
+		{
+			Order order = await dbContext.Orders.FirstAsync(o => o.OrderGames.Any(og => og.GameId == Guid.Parse(gameId) && o.UserId == Guid.Parse(userId)));
+			OrderGame game = order.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+			return game.GameKey!;
+		}
+
 		public async Task<bool> IsGameAlreadyBoughtBefore(string userId, string gameId)
 		{
 			IEnumerable<Order> allCarts = await dbContext.Orders
@@ -230,11 +237,19 @@ namespace GameStoreHub.Services.Data
 			OperationResult result = new();
 			try
 			{
-				Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+				//Order order = await dbContext.Orders.FirstAsync(o => o.OrderGames.Any(og => og.GameId == Guid.Parse(gameId) && o.UserId == Guid.Parse(userId)));
+				//Order cart = await dbContext.Orders.FirstAsync(o => o.OrderGames.Any(og => og.GameId == Guid.Parse(gameId) && o.UserId == Guid.Parse(userId)));
+				List<Order> carts = await dbContext.Orders.Where(o => o.UserId == Guid.Parse(userId) && o.OrderStatus == OrderStatus.Completed).ToListAsync();
 
-				foreach (var orderGame in cart.OrderGames)
+				foreach (var cart in carts)
 				{
-					orderGame.GameKey = GenerateActivationKeyForGame();
+					foreach (var orderGame in cart.OrderGames)
+					{
+						if (orderGame.GameKey == null)
+						{
+							orderGame.GameKey = GenerateActivationKeyForGame();
+						}
+					}
 				}
 
 				await dbContext.SaveChangesAsync();
