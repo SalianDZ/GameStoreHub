@@ -82,9 +82,6 @@ namespace GameStoreHub.Web.Controllers
 				// Deduct the total price from the user's wallet
 				OperationResult result = await userService.DeductBalanceByUserIdAsync(userId, model.TotalPrice);
 
-				// Generate and assign game activation codes for each purchased game
-				// This can be part of the orderService.CreateOrderAsync logic or a separate step
-
 				if (result.IsSuccess)
 				{
 					await cartService.AssignActivationCodesToUserOrderByUserIdAsync(userId);
@@ -106,19 +103,22 @@ namespace GameStoreHub.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddToCart(string id)
 		{
+			string userId = User.GetId();
 			if (!await gameService.DoesGameExistByIdAsync(id))
 			{
 				return BadRequest("Select a valid game");
 			}
 
-            if (await cartService.IsGameInCartByIdAsync(User.GetId(), id))
+            if (await cartService.IsGameInCartByIdAsync(userId, id))
             {
                 return BadRequest("Selected game is already in the cart!");
             }
 
-			//TODO!!!
-			//Here we need to make a check if the game is alreadu purchased before!!!
-            string userId = User.GetId();
+			if (await cartService.IsGameAlreadyBoughtBefore(userId, id))
+			{
+				return BadRequest("You already have bought this game before!");
+			}
+
             OperationResult result = await cartService.AddItemToCart(userId, id);
 
             if (!result.IsSuccess)

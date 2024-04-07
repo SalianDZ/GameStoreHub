@@ -111,6 +111,30 @@ namespace GameStoreHub.Services.Data
 			return result;
 		}
 
+		public async Task<bool> IsGameAlreadyBoughtBefore(string userId, string gameId)
+		{
+			IEnumerable<Order> allCarts = await dbContext.Orders
+				.Where(o => o.UserId == Guid.Parse(userId) && o.IsActive)
+				.Include(o => o.OrderGames)
+				.ThenInclude(og => og.Game)
+				.ToArrayAsync();
+
+			bool isGameAlreadyAdded = false;
+
+			foreach (var currentCart in allCarts)
+			{
+				foreach (var game in currentCart.OrderGames.ToList())
+				{
+					if (game.GameId == Guid.Parse(gameId))
+					{
+						isGameAlreadyAdded = true;
+					}
+				}
+			}
+
+			return isGameAlreadyAdded;
+		}
+
 		public async Task<CheckoutViewModel> GetCartViewModelByUserIdAsync(string userId)
 		{
 			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
@@ -149,13 +173,15 @@ namespace GameStoreHub.Services.Data
 		public async Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId)
 		{
 			IEnumerable<Order> allCarts = await dbContext.Orders
+				.Where(o => o.OrderStatus == OrderStatus.Completed && o.UserId == Guid.Parse(userId))
 				.Include(o => o.OrderGames)
 				.ThenInclude(og => og.Game)
-				.Where(o => o.OrderStatus == OrderStatus.Completed && o.UserId == Guid.Parse(userId)).ToArrayAsync();
-			List<CheckoutItemViewModel> allPurchasedGames = new List<CheckoutItemViewModel>();
-			foreach (var cart in allCarts)
+				.ToArrayAsync();
+
+			List<CheckoutItemViewModel> allPurchasedGames = new();
+			foreach (var currentCart in allCarts)
 			{
-				foreach (var game in cart.OrderGames)
+				foreach (var game in currentCart.OrderGames.ToList())
 				{
 					CheckoutItemViewModel currentGame = new()
 					{
@@ -278,17 +304,17 @@ namespace GameStoreHub.Services.Data
 
         public async Task<bool> IsGameInCartByIdAsync(string userId, string gameId)
         {
-            Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-            OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
+			OrderGame? existingItem = cart.OrderGames.FirstOrDefault(og => og.GameId == Guid.Parse(gameId));
 
-            if (existingItem != null)
-            {
-                return true;
-            }
+			if (existingItem != null)
+			{
+				return true;
+			}
 
 			return false;
-        }
+		}
 
 		private static string GenerateActivationKeyForGame()
 		{
