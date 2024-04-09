@@ -1,4 +1,5 @@
-﻿using GameStoreHub.Services.Data.Interfaces;
+﻿using GameStoreHub.Services.Data;
+using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
 using GameStoreHub.Web.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
@@ -9,17 +10,19 @@ namespace GameStoreHub.Web.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly IGameService gamerService;
+		private readonly IGameService gameService;
 
-		public HomeController(ILogger<HomeController> logger, IGameService gamerService)
+		public HomeController(ILogger<HomeController> logger, IGameService gameService)
 		{
 			_logger = logger;
-			this.gamerService = gamerService;
+			this.gameService = gameService;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			IEnumerable<GamesViewModel> latestGames = await gamerService.GetLatestFiveGamesAsync();
+			var topSellingGames = await gameService.GetTopSellingGames(); // Fetch top-selling games
+			ViewBag.TopSellingGames = topSellingGames;
+			IEnumerable<GamesViewModel> latestGames = await gameService.GetLatestFiveGamesAsync();
 			return View(latestGames);
 		}
 

@@ -3,6 +3,7 @@ using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
 using Microsoft.EntityFrameworkCore;
+using GameStoreHub.Data.Models.Enums;
 
 namespace GameStoreHub.Services.Data
 {
@@ -44,6 +45,27 @@ namespace GameStoreHub.Services.Data
 				}).ToArrayAsync();
 
 			return allGamesFromCategory;
+		}
+
+		public async Task<List<TopSellingGameViewModel>> GetTopSellingGames(int count = 5)
+		{ 
+			List<TopSellingGameViewModel> topSellingGames = await dbContext.OrderGames
+				.Where(og => og.Order.OrderStatus == OrderStatus.Completed)
+				.GroupBy(og => og.GameId)
+				.Select(og => new TopSellingGameViewModel
+				{
+					Id = og.First().Game.Id,
+					Title = og.First().Game.Title,
+					ImagePath = og.First().Game.ImagePath,
+					Price = og.First().Game.Price,
+					// Use the count of OrderGame records as a proxy for sales volume
+					SalesCount = og.Count() // This counts the occurrences of each game in OrderGames
+				})
+				.OrderByDescending(vm => vm.SalesCount)
+				.Take(count)
+				.ToListAsync();
+
+			return topSellingGames;
 		}
 
 		public async Task<Game> GetGameByIdAsync(string id)

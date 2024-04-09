@@ -14,5 +14,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<GameDetailsViewModel> GetGameViewModelForDetailsByIdAsync(string gameId);
 
 		Task<Game> GetGameByIdAsync(string id);
+
+		Task<List<TopSellingGameViewModel>> GetTopSellingGames(int count = 5);
 	}
 }
