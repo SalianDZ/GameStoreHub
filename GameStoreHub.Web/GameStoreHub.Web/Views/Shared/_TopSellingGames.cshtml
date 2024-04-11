@@ -36,7 +36,7 @@
 											<div class="product-body">
 												<p class="product-category">@game.Category</p>
 												<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@game.Id">@game.Title</a></h3>
-												<h4 class="product-price">$@game.Price <del class="product-old-price">$990.00</del></h4>
+												<h4 class="product-price">$@game.Price</h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
 													<i class="fa fa-star"></i>
@@ -45,12 +45,11 @@
 													<i class="fa fa-star"></i>
 												</div>
 												<div class="product-btns">
-													<a class="add-to-wishlist" asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@game.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a>
-													<a class="quick-view" asp-controller="Game" asp-action="Details" asp-route-id="@game.Id"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></a>
+													<button class="add-to-wishlist"><a asp-controller ="Wishlist" asp-action="AddToWishlist" asp-route-id="@game.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a></button>
 												</div>
 											</div>
 											<div class="add-to-cart">
-												<a class="add-to-cart-btn" asp-controller="Order" asp-action="AddToCart" asp-route-id="@game.Id"><i class="fa fa-shopping-cart"></i> add to cart</a>
+												<a asp-controller="Order" asp-action="AddToCart" asp-route-id="@game.Id"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button></a>
 											</div>
 										</div>
 										<!-- /product -->

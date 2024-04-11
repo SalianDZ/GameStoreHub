@@ -23,7 +23,8 @@ namespace GameStoreHub.Web.Controllers
 			var topSellingGames = await gameService.GetTopSellingGames(); // Fetch top-selling games
 			ViewBag.TopSellingGames = topSellingGames;
 			IEnumerable<GamesViewModel> latestGames = await gameService.GetLatestFiveGamesAsync();
-			return View(latestGames);
+			ViewBag.LatestGames = latestGames;
+			return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
