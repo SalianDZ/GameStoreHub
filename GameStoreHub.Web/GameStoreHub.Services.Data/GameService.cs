@@ -110,5 +110,22 @@ namespace GameStoreHub.Services.Data
 
 			return model;
 		}
+
+		public async Task<IEnumerable<GamesViewModel>> GetSearchedGames(string query)
+		{
+			IEnumerable<GamesViewModel> games = await dbContext.Games
+				.Include(g => g.Category)
+				.Where(g => g.Title.Contains(query) || g.Description.Contains(query) && g.IsActive)
+				.Select(g => new GamesViewModel
+				{
+					Id = g.Id,
+					Price = g.Price.ToString(),
+					ImagePath = g.ImagePath,
+					Category = g.Category.Name,
+					Title = g.Title
+				}).ToListAsync();
+
+			return games;
+		}
 	}
 }

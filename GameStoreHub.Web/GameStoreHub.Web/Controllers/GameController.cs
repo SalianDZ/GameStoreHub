@@ -27,6 +27,17 @@ namespace GameStoreHub.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return View("Index");
+            }
+
+            IEnumerable<GamesViewModel> searchedGames = await gameService.GetSearchedGames(query);
+            return View(searchedGames);
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> OwnedGames()

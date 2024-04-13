@@ -1,5 +1,4 @@
-﻿using GameStoreHub.Services.Data;
-using GameStoreHub.Services.Data.Interfaces;
+﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
 using GameStoreHub.Web.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
