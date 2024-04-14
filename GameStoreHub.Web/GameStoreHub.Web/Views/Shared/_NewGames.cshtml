@@ -41,7 +41,8 @@
 												<i class="fa fa-star"></i>
 											</div>
 											<div class="product-btns">
-												<button class="add-to-wishlist"><a asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@newGame.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a></button>											</div>
+												<button class="add-to-wishlist"><a asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@newGame.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a></button>
+											</div>
 										</div>
 										<div class="add-to-cart">
 											<a asp-controller="Order" asp-action="AddToCart" asp-route-id="@newGame.Id.ToString()"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>add to cart</button></a>
