@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="~/login-register-page/css/login.css">
 
 	</head>
-	<body class="img js-fullheight" style="background-image: url('/images/hero-bg2.jpeg')">
+	<body class="img js-fullheight" style="background-image: url('/images/background-images/login-background2.jpeg')">
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -31,11 +31,11 @@
 		      			<form method="post" class="signin-form">
 							<div class="form-group">
 								<input asp-for="@Model.FirstName" type="text" class="form-control" placeholder="Your first name here..." required>
-								<span asp-validation-for="Email" class="text-danger"></span>
+								<span asp-validation-for="FirstName" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<input asp-for="@Model.LastName" type="text" class="form-control" placeholder="Your last name here..." required>
-								<span asp-validation-for="Email" class="text-danger"></span>
+								<span asp-validation-for="FirstName" class="text-danger"></span>
 							</div>
 		      				<div class="form-group">
 		      					<input asp-for="@Model.Email" type="text" class="form-control" placeholder="Your email here..." required>
@@ -43,13 +43,13 @@
 		      				</div>
 							<div class="form-group">
 								<input asp-for="@Model.Password" id="password-field" type="password" class="form-control" placeholder="Your password here..." required>
-								<span asp-validation-for="Email" class="text-danger"></span>
+								<span asp-validation-for="@Model.Password" class="text-danger"></span>
 								<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 							</div>
 							<div class="form-group">
-								<input asp-for="@Model.ConfirmPassword" id="password-field" type="password" class="form-control" placeholder="Confirm the password..." required>
-								<span asp-validation-for="Email" class="text-danger"></span>
-								<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+								<input asp-for="@Model.ConfirmPassword" id="confirmpassword-field" type="password" class="form-control" placeholder="Confirm the password..." required>
+								<span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+								<span toggle="#confirmpassword-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 							</div>
 
 							<div class="form-group">
