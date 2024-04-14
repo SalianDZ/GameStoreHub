@@ -104,8 +104,8 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<input type="text" class="input" placeholder="Search here">
+								<form asp-controller="Game" asp-action="Search" method="get">
+									<input type="text" name="query" class="input" placeholder="Search here">
 									<button type="submit" class="search-btn">Search</button>
 								</form>
 							</div>

@@ -31,7 +31,7 @@ namespace GameStoreHub.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(query))
             {
-                return View("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             IEnumerable<GamesViewModel> searchedGames = await gameService.GetSearchedGames(query);
