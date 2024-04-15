@@ -114,6 +114,7 @@ namespace GameStoreHub.Services.Data
 		{
 			IEnumerable<GamesViewModel> model = 
 				await dbContext.Games
+				.Where(g => g.IsActive)
 				.Include(g => g.Category)
 				.OrderByDescending(g => g.ReleaseDate)
 				.Take(5)
@@ -133,7 +134,7 @@ namespace GameStoreHub.Services.Data
 		{
 			IEnumerable<GamesViewModel> games = await dbContext.Games
 				.Include(g => g.Category)
-				.Where(g => g.Title.Contains(query) || g.Description.Contains(query) && g.IsActive)
+				.Where(g => (g.Title.Contains(query) || g.Description.Contains(query)) && g.IsActive)
 				.Select(g => new GamesViewModel
 				{
 					Id = g.Id,
