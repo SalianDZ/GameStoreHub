@@ -35,6 +35,10 @@ namespace GameStoreHub.Web.Controllers
             }
 
             IEnumerable<GamesViewModel> searchedGames = await gameService.GetSearchedGames(query);
+            if (!searchedGames.Any())
+            {
+                return View("NoResultsFound");
+            }
             return View(searchedGames);
         }
 
