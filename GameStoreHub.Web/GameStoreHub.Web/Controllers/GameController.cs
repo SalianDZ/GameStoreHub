@@ -70,7 +70,7 @@ namespace GameStoreHub.Web.Controllers
             bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
             if (id == null || !doesGameExist)
             {
-                return NotFound();
+                return StatusCode(404);
             }
 
             GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
