@@ -29,104 +29,150 @@ namespace GameStoreHub.Web.Controllers
 
         public async Task<IActionResult> Search(string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
+				if (string.IsNullOrWhiteSpace(query))
+				{
+					return RedirectToAction("Index", "Home");
+				}
 
-            IEnumerable<GamesViewModel> searchedGames = await gameService.GetSearchedGames(query);
-            if (!searchedGames.Any())
+				IEnumerable<GamesViewModel> searchedGames = await gameService.GetSearchedGames(query);
+				if (!searchedGames.Any())
+				{
+					return View("NoResultsFound");
+				}
+				return View(searchedGames);
+			}
+            catch (Exception)
             {
-                return View("NoResultsFound");
+                return StatusCode(500);
             }
-            return View(searchedGames);
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> OwnedGames()
         {
-            string userId = User.GetId();
-            IEnumerable<CheckoutItemViewModel> purchasedItems = await cartService.GetPurchasedItemsByUserIdAsync(userId);
-            return View(purchasedItems);
+            try
+            {
+				string userId = User.GetId();
+				IEnumerable<CheckoutItemViewModel> purchasedItems = await cartService.GetPurchasedItemsByUserIdAsync(userId);
+				return View(purchasedItems);
+			}
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         public async Task<IActionResult> GetActivationCode(string id)
         {
-            string userId = User.GetId();
-            if (!await cartService.IsGameAlreadyBoughtBefore(userId, id))
+            try
             {
-                return BadRequest("You do not have access to this game!");
+				string userId = User.GetId();
+				if (!await cartService.IsGameAlreadyBoughtBefore(userId, id))
+				{
+					return BadRequest("You do not have access to this game!");
+				}
+				string actCode = await cartService.GetActivationCodeByUserAndGameIdAsync(userId, id);
+				return Ok(actCode);
+			}
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
-            string actCode = await cartService.GetActivationCodeByUserAndGameIdAsync(userId, id);
-            return Ok(actCode);
         }
 
         public async Task<IActionResult> GamesByCategory(int id)
         {
-            IEnumerable<GamesViewModel> model = await gameService.GetAllGamesFromCategoryByCategoryIdAsync(id);
-            return View(model);
+            try
+            {
+				IEnumerable<GamesViewModel> model = await gameService.GetAllGamesFromCategoryByCategoryIdAsync(id);
+				return View(model);
+			}
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
-            if (id == null || !doesGameExist)
+            try
             {
-                return StatusCode(404);
+				bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+				if (id == null || !doesGameExist)
+				{
+					return StatusCode(404);
+				}
+
+				GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+				model.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
+
+                //This is for the partial view in the details
+				IEnumerable<GamesViewModel> relatedGames = await gameService.GetRelatedGamesByCategoryIdAsync(model.CategoryId, model.Id.ToString());
+                ViewBag.RelatedGames = relatedGames;
+
+				GameDetailsAndReviewFormViewModel detailsPageModel = new();
+				detailsPageModel.GameDetailsPage = model;
+				return View(detailsPageModel);
+			}
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
-
-            GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
-            model.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
-
-            GameDetailsAndReviewFormViewModel detailsPageModel = new();
-            detailsPageModel.GameDetailsPage = model;
-            return View(detailsPageModel);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Details(string id, ReviewFormModel model)
         {
-			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
-			if (id == null || !doesGameExist)
-			{
-				return NotFound();
-			}
-
-			GameDetailsAndReviewFormViewModel detailsModel = new();
-			if (model != null)
+            try
             {
-                if (model.Rating <= 0 || model.Rating >= 6)
-                {
-                    ModelState.AddModelError(nameof(model.Rating), "The rating must be between 1 and 5!");
-                }
-
-                if (model.Comment != null && model.Comment.Length > 100)
-                {
-					ModelState.AddModelError(nameof(model.Comment), "The comment must be between consist of maximum 100 characters!");
+				bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+				if (id == null || !doesGameExist)
+				{
+					return NotFound();
 				}
 
-                if (!ModelState.IsValid)
-                {
-                    detailsModel.ReviewForm = model;
-                    detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
-                    return View(detailsModel);
-                }
+				GameDetailsAndReviewFormViewModel detailsModel = new();
+				if (model != null)
+				{
+					if (model.Rating <= 0 || model.Rating >= 6)
+					{
+						ModelState.AddModelError(nameof(model.Rating), "The rating must be between 1 and 5!");
+					}
 
-                string userId = User.GetId();
-                OperationResult databaseResult = await reviewService.AddReviewToGameByIdAsync(id, userId, model);
+					if (model.Comment != null && model.Comment.Length > 100)
+					{
+						ModelState.AddModelError(nameof(model.Comment), "The comment must be between consist of maximum 100 characters!");
+					}
 
-				if (databaseResult.IsSuccess)
-                {
-                    return RedirectToAction("Details", "Game", id);
-                }
+					if (!ModelState.IsValid)
+					{
+						detailsModel.ReviewForm = model;
+						detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+						return View(detailsModel);
+					}
+
+					string userId = User.GetId();
+					OperationResult databaseResult = await reviewService.AddReviewToGameByIdAsync(id, userId, model);
+
+					if (databaseResult.IsSuccess)
+					{
+						return RedirectToAction("Details", "Game", id);
+					}
+				}
+
+				detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
+				detailsModel.GameDetailsPage.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
+				return View(detailsModel);
+			}
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
-
-			detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
-            detailsModel.GameDetailsPage.Reviews = await reviewService.GetAllReviewsOfGameByIdAsync(id);
-			return View(detailsModel);
 		}
     }
 }

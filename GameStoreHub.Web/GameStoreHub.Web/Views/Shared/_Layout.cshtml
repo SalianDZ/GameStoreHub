@@ -267,10 +267,9 @@
 						<div class="footer">
 							<h3 class="footer-title">Categories</h3>
 							<ul class="footer-links">
-								<li><a href="#">Hot deals</a></li>
-								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 1 })">Action Titles</a></li>
-								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 2 })">Horror Titles</a></li>
-								<li><a href="@Url.Action("GamesByCategory", "Game", new { categoryId = 5 })">Sport Titles</a></li>
+								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="1">Action Titles</a></li>
+								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="2">Horror Titles</a></li>
+								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="5">Sport Titles</a></li>
 							</ul>
 						</div>
 					</div>
@@ -294,9 +293,11 @@
 						<div class="footer">
 							<h3 class="footer-title">Service</h3>
 							<ul class="footer-links">
-								<li><a href="#">My Account</a></li>
-								<li><a href="#">View Cart</a></li>
-								<li><a href="#">Wishlist</a></li>
+								@if (User.Identity.IsAuthenticated)
+								{
+									<li><a asp-area="Identity" asp-page="/Account/Manage/Index">My Account</a></li>
+								}
+								<li><a asp-controller="Order" asp-action="Cart">View Cart</a></li>
 								<li><a href="#">Track My Order</a></li>
 								<li><a href="#">Help</a></li>
 							</ul>

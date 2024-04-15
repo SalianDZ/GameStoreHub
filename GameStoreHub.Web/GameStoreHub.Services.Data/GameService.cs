@@ -47,6 +47,24 @@ namespace GameStoreHub.Services.Data
 			return allGamesFromCategory;
 		}
 
+		public async Task<IEnumerable<GamesViewModel>> GetRelatedGamesByCategoryIdAsync(int categoryId, string gameId)
+		{
+			IEnumerable<GamesViewModel> allGamesFromCategory =
+				await dbContext.Games
+				.Include(g => g.Category)
+				.Where(g => g.IsActive && g.CategoryId == categoryId && g.Id != Guid.Parse(gameId))
+				.Select(g => new GamesViewModel
+				{
+					Id = g.Id,
+					Title = g.Title,
+					Category = g.Category.Name,
+					Price = g.Price.ToString(),
+					ImagePath = g.ImagePath
+				}).ToArrayAsync();
+
+			return allGamesFromCategory;
+		}
+
 		public async Task<List<TopSellingGameViewModel>> GetTopSellingGames(int count = 5)
 		{ 
 			List<TopSellingGameViewModel> topSellingGames = await dbContext.OrderGames
