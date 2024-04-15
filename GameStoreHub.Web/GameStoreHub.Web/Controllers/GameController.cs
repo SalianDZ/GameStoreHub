@@ -13,9 +13,9 @@ namespace GameStoreHub.Web.Controllers
     {
         private readonly IGameService gameService;
         private readonly IReviewService reviewService;
-        private readonly ICartService cartService;
+        private readonly IOrderService cartService;
 
-        public GameController(IGameService gameService, IReviewService reviewService, ICartService cartService)
+        public GameController(IGameService gameService, IReviewService reviewService, IOrderService cartService)
         {
             this.gameService = gameService;
             this.reviewService = reviewService;

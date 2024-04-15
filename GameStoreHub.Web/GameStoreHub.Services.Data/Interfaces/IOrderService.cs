@@ -5,7 +5,7 @@ using GameStoreHub.Web.ViewModels.OrderGame;
 
 namespace GameStoreHub.Services.Data.Interfaces
 {
-	public interface ICartService
+	public interface IOrderService
 	{
 		Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId);
 

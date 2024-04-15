@@ -11,11 +11,11 @@ namespace GameStoreHub.Web.Controllers
 {
 	public class OrderController : Controller
 	{
-		private readonly ICartService cartService;
+		private readonly IOrderService cartService;
 		private readonly IUserService userService;
 		private readonly IGameService gameService;
 
-        public OrderController(ICartService cartService, IUserService userService, IGameService gameService)
+        public OrderController(IOrderService cartService, IUserService userService, IGameService gameService)
         {
 			this.cartService = cartService;
 			this.userService = userService;

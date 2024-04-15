@@ -4,7 +4,7 @@
 	ViewData["Address"] = "Velingrad, Bulgaria";
 	ViewData["AboutUs"] = "Gamefinity: Your portal to a universe of curated video games, spanning classics to new releases.";
 	@inject IUserService userService
-	@inject ICartService cartService
+	@inject IOrderService cartService
 	@inject IWishlistService wishlistService
 
 	string? fullName = await userService.GetFullNameByEmailAsync(User.Identity!.Name!);

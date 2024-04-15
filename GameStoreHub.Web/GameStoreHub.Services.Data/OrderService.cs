@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Data
 {
-    public class CartService : ICartService
+    public class OrderService : IOrderService
 	{
 		private readonly GameStoreDbContext dbContext;
 
 		private readonly IGameService gameService;
 		//private readonly IUserService userService;
 
-        public CartService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
+        public OrderService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
         {
             this.dbContext = dbContext;
 			this.gameService = gameService;
