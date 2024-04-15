@@ -42,55 +42,32 @@ namespace GameStoreHub.Services.Data
 			return wishlist;
 		}
 
-		public async Task<OperationResult> AddItemToWishlist(string userId, string gameId)
+		public async Task AddItemToWishlist(string userId, string gameId)
 		{
-			OperationResult result = new();
+			Wishlist wishlist = await GetOrCreateWishlistForUserByUserIdAsync(userId);
 
-			try
+			// Since the game is not in the wishlist, proceed to add it
+			Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
+
+			WishlistItem newItem = new()
 			{
-				Wishlist wishlist = await GetOrCreateWishlistForUserByUserIdAsync(userId);
+				WishlistId = wishlist.Id,
+				Game = game
+			};
 
-				// Since the game is not in the wishlist, proceed to add it
-				Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
-
-				WishlistItem newItem = new()
-				{
-					WishlistId = wishlist.Id,
-					Game = game
-				};
-
-				dbContext.WishlistItems.Add(newItem);
-				await dbContext.SaveChangesAsync();
-				result.SetSuccess();
-			}
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-			}
-
-			return result;
+			dbContext.WishlistItems.Add(newItem);
+			await dbContext.SaveChangesAsync();		
 		}
 
-		public async Task<OperationResult> RemoveItemFromWishlist(string userId, string gameId)
+		public async Task RemoveItemFromWishlist(string userId, string gameId)
 		{
-			OperationResult result = new();
-			try
-			{
-				Wishlist wishlist = await GetOrCreateWishlistForUserByUserIdAsync(userId);
+			Wishlist wishlist = await GetOrCreateWishlistForUserByUserIdAsync(userId);
 
-				WishlistItem existingItem = wishlist.WishlistItems.First(og => og.GameId == Guid.Parse(gameId));
+			WishlistItem existingItem = wishlist.WishlistItems.First(og => og.GameId == Guid.Parse(gameId));
 
-				dbContext.WishlistItems.Remove(existingItem!);
+			dbContext.WishlistItems.Remove(existingItem!);
 
-				await dbContext.SaveChangesAsync();
-				result.SetSuccess();
-			}
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-			}
-
-			return result;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<WishlistItemViewModel>> GetWishlistItemsByUserIdAsync(string userId)

@@ -8,9 +8,9 @@ namespace GameStoreHub.Services.Data.Interfaces
 	{
 		Task<Wishlist> GetOrCreateWishlistForUserByUserIdAsync(string userId);
 
-		Task<OperationResult> AddItemToWishlist(string userId, string gameId);
+		Task AddItemToWishlist(string userId, string gameId);
 
-		Task<OperationResult> RemoveItemFromWishlist(string userId, string gameId);
+		Task RemoveItemFromWishlist(string userId, string gameId);
 
 		Task<IEnumerable<WishlistItemViewModel>> GetWishlistItemsByUserIdAsync(string userId);
 
