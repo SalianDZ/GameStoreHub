@@ -8,6 +8,7 @@
 	@inject IWishlistService wishlistService
 
 	string? fullName = await userService.GetFullNameByEmailAsync(User.Identity!.Name!);
+	// decimal? balance = await userService.GetUserBalanceByIdAsync(User.GetId());
 
 	IEnumerable<CheckoutItemViewModel> cartItems = new List<CheckoutItemViewModel>();
 	IEnumerable<WishlistItemViewModel> wishlistItems = new List<WishlistItemViewModel>();
@@ -50,6 +51,7 @@
 
 	<!-- Custom stlylesheet -->
 	<link type="text/css" rel="stylesheet" href="~/css/style.css" />
+	<link type="text/css" rel="stylesheet" href="~/css/add-funds.css" />
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,6 +77,8 @@
 						{
 							<li style="color:white;">Hello, @fullName</li>
 							<li><a asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-o"></i> My Account</a></li>
+							<li><a asp-controller="User" asp-action="AddFunds">Add funds</a></li>
+							<li><a>$@await userService.GetUserBalanceByIdAsync(User.GetId())</a></li>
 							<form asp-controller="User" asp-action="Logout" method="post" style="display: inline-block">
 								<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
 							</form> 

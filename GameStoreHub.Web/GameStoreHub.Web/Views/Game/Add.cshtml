@@ -1,0 +1,105 @@
+﻿@model GameFormViewModel
+
+<div class="row" >
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" placeholder="Title...">
+                <span asp-validation-for="Title" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" rows="4" class="form-control"
+                          placeholder="Description..."></textarea>
+                <span asp-validation-for="Description" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="Price...">
+                <span asp-validation-for="Price" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImagePath"></label>
+                <input asp-for="ImagePath" class="form-control" placeholder="Your image path here...">                
+                <span asp-validation-for="ImagePath" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate"></label>
+                <input asp-for="ReleaseDate" class="form-control">
+                <span asp-validation-for="ReleaseDate" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId"></label>
+                <select asp-for="CategoryId" class="form-control">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CategoryId" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Create a game!" />
+            </div>
+        </form>
+    </div>
+</div>
+<!-- SECTION -->
+@* <div class="section" style="margin-left:400px;">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+			<form asp-controller="Order" asp-action="Checkout" method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="col-md-7">
+					<!-- Billing Details -->
+                    <div class="billing-details">
+                        <div class="section-title">
+                            <h3 class="title">Game information</h3>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" asp-for="Title" type="text" placeholder="Title">
+                            <span asp-validation-for="Title" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" placeholder="Description" asp-for="Description">
+                            <span asp-validation-for="Description" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" placeholder="Developer" asp-for="Developer">
+                            <span asp-validation-for="Developer" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" placeholder="Price" asp-for="Price">
+                            <span asp-validation-for="Price" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" placeholder="Image Path" asp-for="ImagePath">
+                            <span asp-validation-for="ImagePath" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" placeholder="Release Data" asp-for="ReleaseDate">
+                            <span asp-validation-for="ReleaseDate" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <select asp-for="CategoryId" class="input">
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="small text-danger"></span>
+                        </div>
+                        <input type="submit" class="primary-btn order-submit" value="Create game" style="margin-left:250px;">
+                    </div>
+					<!-- /Billing Details -->
+				</div>
+			</form>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION --> *@

@@ -1,9 +1,13 @@
 ﻿using GameStoreHub.Data.Models;
+using GameStoreHub.Services.Data;
+using GameStoreHub.Services.Data.Interfaces;
+using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.User;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Web.Controllers
 {
@@ -11,23 +15,35 @@ namespace GameStoreHub.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserService userService;
         public UserController(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IUserService userService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.userService = userService;
         }
 
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterFormModel model)
         {
-            if (!ModelState.IsValid)
+			if (User.Identity.IsAuthenticated)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -58,7 +74,12 @@ namespace GameStoreHub.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string? returnUrl = null)
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+			if (User.Identity.IsAuthenticated)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             LoginFormModel model = new()
             {
                 ReturnUrl = returnUrl
@@ -69,7 +90,12 @@ namespace GameStoreHub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginFormModel model)
         {
-            if (!ModelState.IsValid)
+			if (User.Identity.IsAuthenticated)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -93,5 +119,35 @@ namespace GameStoreHub.Web.Controllers
 			await signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
-    }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> AddFunds()
+        {
+            return View();
+        }
+
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> AddFunds(decimal amount)
+		{
+            string userId = User.GetId();
+            if (amount <= 0 || amount >= 1000)
+            {
+				//Tempdata
+                return RedirectToAction("Index", "Home");
+			}
+
+			try
+            {
+                await userService.IncreaseUserBalance(userId, amount);
+			}
+            catch (Exception)
+            {
+                //Tempdata
+            }
+
+            return RedirectToAction("Index", "Home");
+		}
+	}
 }

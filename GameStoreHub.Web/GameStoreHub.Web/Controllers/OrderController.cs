@@ -78,9 +78,7 @@ namespace GameStoreHub.Web.Controllers
 				}
 				else
 				{
-					//We must add tempdata here!
-					//There was a problem with the payment
-					return RedirectToAction("Index", "Home");
+					return BadRequest("There was problem with the payment!");
 				}
 			}
 			catch (Exception)

@@ -146,5 +146,38 @@ namespace GameStoreHub.Services.Data
 
 			return games;
 		}
-	}
+
+        public async Task AddGameAsync(GameFormViewModel model)
+        {
+			Game game = new()
+			{
+				Title = model.Title,
+				Description = model.Description,
+				Price = model.Price,
+				Developer = model.Developer,
+				ReleaseDate = model.ReleaseDate,
+				CategoryId = model.CategoryId,
+				ImagePath = model.ImagePath,
+				IsActive = true,
+			};
+
+			await dbContext.Games.AddAsync(game);
+			await dbContext.SaveChangesAsync();
+        }
+
+		public async Task<IEnumerable<GamesViewModel>> GetAllGames()
+		{
+			IEnumerable<GamesViewModel> allGames = await dbContext.Games.Where(g => g.IsActive)
+				.Select(g => new GamesViewModel
+				{
+					Id = g.Id,
+					Title = g.Title,
+					Price = g.Price.ToString(),
+					Category = g.Category.Name,
+					ImagePath = g.ImagePath
+				}).ToArrayAsync();
+
+			return allGames;
+		}
+    }
 }

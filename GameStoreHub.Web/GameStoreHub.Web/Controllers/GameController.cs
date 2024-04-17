@@ -1,6 +1,6 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Services.Data.Interfaces;
+﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.Infrastructure.Extensions;
+using GameStoreHub.Web.ViewModels.Category;
 using GameStoreHub.Web.ViewModels.Game;
 using GameStoreHub.Web.ViewModels.OrderGame;
 using GameStoreHub.Web.ViewModels.Review;
@@ -9,22 +9,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameStoreHub.Web.Controllers
 {
-    public class GameController : Controller
+	public class GameController : Controller
     {
         private readonly IGameService gameService;
         private readonly IReviewService reviewService;
         private readonly IOrderService cartService;
+		private readonly ICategoryService categoryService;
 
-        public GameController(IGameService gameService, IReviewService reviewService, IOrderService cartService)
+        public GameController(IGameService gameService, IReviewService reviewService, IOrderService cartService, ICategoryService categoryService)
         {
             this.gameService = gameService;
             this.reviewService = reviewService;
             this.cartService = cartService;
+			this.categoryService = categoryService;
         }
             
-        public IActionResult All()
+        public async Task<IActionResult> All()
         {
-            return View();
+            IEnumerable<GamesViewModel> allGames = await gameService.GetAllGames();
+            return View(allGames);
         }
 
         public async Task<IActionResult> Search(string query)
@@ -65,6 +68,7 @@ namespace GameStoreHub.Web.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> GetActivationCode(string id)
         {
             try
@@ -170,5 +174,61 @@ namespace GameStoreHub.Web.Controllers
                 return StatusCode(500);
             }
 		}
+
+		[Authorize]
+		public async Task<IActionResult> Add()
+		{
+			string userId = User.GetId();
+
+			try
+			{
+				IEnumerable<CategoryViewModel> categories
+				= await categoryService.GetAllCategoriesAsync();
+
+				GameFormViewModel house = new()
+				{
+					Categories = categories,
+				};
+
+				return View(house);
+			}
+			catch (Exception)
+			{
+				return BadRequest("Something happened while trying to add a game! Please try again later!");
+			}
+
+		}
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Add(GameFormViewModel model)
+        {
+            string userId = User.GetId();
+
+            if (model.CategoryId < 1 || model.CategoryId > 5)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Selected category doesn't exists");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+
+                return View(model);
+            }
+
+            try
+            {
+                await gameService.AddGameAsync(model);
+                return RedirectToAction("All", "Game");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "Unexpected error occured while adding your new house. Please try again later or contact administrator");
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+
+                return View(model);
+            }
+        }
     }
 }

@@ -20,5 +20,9 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<GamesViewModel>> GetSearchedGames(string query);
 
 		Task<IEnumerable<GamesViewModel>> GetRelatedGamesByCategoryIdAsync(int categoryId, string gameId);
+		Task AddGameAsync(GameFormViewModel model);
+		Task<IEnumerable<GamesViewModel>> GetAllGames();
+
+
 	}
 }

@@ -11,5 +11,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<decimal> GetUserBalanceByIdAsync(string userId);
 
 		Task<bool> DeductBalanceByUserIdAsync(string userId, decimal price);
+
+		Task IncreaseUserBalance(string userId, decimal balance);
 	}
 }

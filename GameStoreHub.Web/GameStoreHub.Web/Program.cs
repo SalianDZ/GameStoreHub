@@ -2,6 +2,7 @@ using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data;
 using GameStoreHub.Services.Data.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Web
@@ -42,7 +43,11 @@ namespace GameStoreHub.Web
 				cfg.LoginPath = "/User/Login";
 			});
 
-			builder.Services.AddControllersWithViews();
+			builder.Services.AddControllersWithViews()
+				.AddMvcOptions(options =>
+				{
+					options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+				});
 
 			var app = builder.Build();
 

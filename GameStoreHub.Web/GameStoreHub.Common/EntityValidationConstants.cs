@@ -15,12 +15,17 @@
 
 			public const int DeveloperMinLength = 3;
 			public const int DeveloperMaxLength = 100;
+
+			public const int PathImageMinLength = 5;
 		}
 
 		public static class Category
 		{
 			public const int NameMinLength = 3;
 			public const int NameMaxLength = 50;
+
+			public const int CategoryFormMinRange = 1;
+			public const int CategoryFormMaxRange = 5;
 		}
 
 		public static class Order

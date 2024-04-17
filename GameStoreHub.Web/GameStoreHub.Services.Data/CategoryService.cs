@@ -25,5 +25,6 @@ namespace GameStoreHub.Services.Data
 
 			return allCategories;
 		}
-	}
+
+    }
 }

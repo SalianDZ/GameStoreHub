@@ -1,10 +1,10 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Data;
+﻿using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
-using GameStoreHub.Web.ViewModels.Order;
-using GameStoreHub.Web.ViewModels.OrderGame;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static GameStoreHub.Common.EntityValidationConstants;
 
 namespace GameStoreHub.Services.Data
 {
@@ -51,6 +51,13 @@ namespace GameStoreHub.Services.Data
 			ApplicationUser currentUser = await dbContext.Users.FirstAsync(u => u.Id == Guid.Parse(userId));
 			decimal userBalance = currentUser.WalletBalance;
 			return userBalance;
+		}
+
+		public async Task IncreaseUserBalance(string userId, decimal balance)
+		{
+			ApplicationUser user = await dbContext.Users.FirstAsync(u => u.Id == Guid.Parse(userId));
+			user.WalletBalance += balance;
+			await dbContext.SaveChangesAsync();
 		}
 	}
 }
