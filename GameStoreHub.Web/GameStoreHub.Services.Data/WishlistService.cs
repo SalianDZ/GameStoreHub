@@ -1,10 +1,7 @@
-﻿using GameStoreHub.Data.Models.Enums;
-using GameStoreHub.Data.Models;
+﻿using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using GameStoreHub.Data;
-using GameStoreHub.Common;
-using GameStoreHub.Web.ViewModels.OrderGame;
 using GameStoreHub.Web.ViewModels.Wishlist;
 
 namespace GameStoreHub.Services.Data
@@ -100,5 +97,6 @@ namespace GameStoreHub.Services.Data
 
 			return false;
 		}
+
 	}
 }

@@ -34,15 +34,15 @@ namespace GameStoreHub.Web.Controllers
 				return BadRequest("Selected game is already in the wishlist!");
 			}
 
-			string userId = User.GetId();
-			OperationResult result = await wishlistService.AddItemToWishlist(userId, id);
-
-			if (!result.IsSuccess)
+			try
 			{
-				foreach (var error in result.Errors)
-				{
-					return BadRequest(error);
-				}
+				string userId = User.GetId();
+				await wishlistService.AddItemToWishlist(userId, id);
+			}
+			catch (Exception)
+			{
+
+				return BadRequest("Something happen while accessing the database! Please try again later.");
 			}
 
 			return RedirectToAction("Index", "Home");
@@ -61,15 +61,15 @@ namespace GameStoreHub.Web.Controllers
 				return BadRequest("Selected game is not in the wishlist!");
 			}
 
-			string userId = User.GetId();
-			OperationResult result = await wishlistService.RemoveItemFromWishlist(userId, id);
-
-			if (!result.IsSuccess)
+			try
 			{
-				foreach (var error in result.Errors)
-				{
-					return BadRequest(error);
-				}
+				string userId = User.GetId();
+				await wishlistService.RemoveItemFromWishlist(userId, id);
+			}
+			catch (Exception)
+			{
+
+				return BadRequest("Something happen while accessing the database! Please try again later.");
 			}
 
 			return RedirectToAction("Index", "Home");

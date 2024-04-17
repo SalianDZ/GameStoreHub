@@ -164,11 +164,8 @@ namespace GameStoreHub.Services.Tests
 		[Test]
 		public async Task AddItemToWishlist_AddsItemToNewWishlist()
 		{
-			var user = new ApplicationUser { Id = Guid.NewGuid() };
-			var game = new Game { Id = Guid.NewGuid(), Title = "New Game" };
-			dbContext.Users.Add(user);
-			dbContext.Games.Add(game);
-			dbContext.SaveChanges();
+			var user = dbContext.Users.Last();
+			var game = dbContext.Games.Last();
 
 			await wishlistService.AddItemToWishlist(user.Id.ToString(), game.Id.ToString());
 
@@ -186,6 +183,76 @@ namespace GameStoreHub.Services.Tests
 
 			// Expect an InvalidOperationException because FirstAsync throws when no elements are found
 			Assert.ThrowsAsync<InvalidOperationException>(() => wishlistService.AddItemToWishlist(user.Id.ToString(), nonexistentGameId));
+		}
+
+		[Test]
+		public async Task RemoveItemFromWishlist_RemovesItemSuccessfully()
+		{
+			var user = dbContext.Users.First();
+			var game = dbContext.Games.First();
+			await wishlistService.AddItemToWishlist(user.Id.ToString(), game.Id.ToString());
+
+			await wishlistService.RemoveItemFromWishlist(user.Id.ToString(), game.Id.ToString());
+
+			var items = dbContext.WishlistItems.Where(wi => wi.WishlistId == user.Id && wi.GameId == game.Id);
+			Assert.AreEqual(0, items.Count());
+		}
+
+		[Test]
+		public void RemoveItemFromWishlist_WithNonexistentItem_ThrowsException()
+		{
+			var user = dbContext.Users.First();
+			var nonexistentGameId = Guid.NewGuid().ToString();
+
+			// Expect an InvalidOperationException because First throws when no elements are found
+			Assert.ThrowsAsync<InvalidOperationException>(() => wishlistService.RemoveItemFromWishlist(user.Id.ToString(), nonexistentGameId));
+		}
+
+		[Test]
+		public async Task GetWishlistItemsByUserIdAsync_WithExistingItems_ReturnsItems()
+		{
+			var user = dbContext.Users.First();
+			var game = dbContext.Games.First();
+			await wishlistService.AddItemToWishlist(user.Id.ToString(), game.Id.ToString());
+			var items = await wishlistService.GetWishlistItemsByUserIdAsync(user.Id.ToString());
+
+			Assert.AreEqual(1, items.Count());
+			var item = items.First();
+			Assert.AreEqual(dbContext.Games.First().Id, item.GameId);
+			Assert.AreEqual(dbContext.Games.First().ImagePath, item.GameImagePath);
+			Assert.AreEqual(dbContext.Games.First().Title, item.GameTitle);
+			Assert.AreEqual(dbContext.Games.First().Price, item.PriceAtPurchase);
+		}
+
+		[Test]
+		public async Task GetWishlistItemsByUserIdAsync_WithNoExistingItems_ReturnsEmpty()
+		{
+			var newUser = dbContext.Users.First();
+
+			var items = await wishlistService.GetWishlistItemsByUserIdAsync(newUser.Id.ToString());
+
+			Assert.IsEmpty(items);
+		}
+
+		[Test]
+		public async Task IsGameInWishlistByIdAsync_WhenGameIsInWishlist_ReturnsTrue()
+		{
+			var user = dbContext.Users.First();
+			var game = dbContext.Games.First();
+			await wishlistService.AddItemToWishlist(user.Id.ToString(), game.Id.ToString());
+
+			var result = await wishlistService.IsGameInWishlistByIdAsync(user.Id.ToString(), game.Id.ToString());
+			Assert.IsTrue(result);
+		}
+
+		[Test]
+		public async Task IsGameInWishlistByIdAsync_WhenGameIsNotInWishlist_ReturnsFalse()
+		{
+			var user = dbContext.Users.First();
+			var game = dbContext.Games.Last();
+
+			var result = await wishlistService.IsGameInWishlistByIdAsync(user.Id.ToString(), game.Id.ToString());
+			Assert.IsFalse(result);
 		}
 	}
 }
