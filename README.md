@@ -2,6 +2,8 @@
 Project Overview
 Type: Web store (similar in concept to platforms like Steam) for selling digital games.
 
+Connection to SQL: Please add your default connection string in the appsetting json.
+
 Framework: ASP.NET Core MVC with Entity Framework Core for data management.
 
 Frontend: Bootstrap 3 for responsive design, ensuring the application is mobile-friendly and accessible on various devices.
