@@ -14,13 +14,11 @@ namespace GameStoreHub.Services.Data
 		private readonly GameStoreDbContext dbContext;
 
 		private readonly IGameService gameService;
-		//private readonly IUserService userService;
 
         public OrderService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
         {
             this.dbContext = dbContext;
 			this.gameService = gameService;
-			//this.userService = userService;
         }
 
 		public async Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId)
@@ -56,59 +54,34 @@ namespace GameStoreHub.Services.Data
 			return cart;	
 		}
 
-		public async Task<OperationResult> AddItemToCart(string userId, string gameId)
+		public async Task AddItemToCart(string userId, string gameId)
 		{
-			OperationResult result = new();
-			try
+			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+
+			// Since the game is not in the cart, proceed to add it
+			Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
+
+			OrderGame newItem = new OrderGame
 			{
-                Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+				OrderId = cart.Id,
+				GameId = Guid.Parse(gameId),
+				PriceAtPurchase = game.Price,
+				IsActive = true
+			};
 
-                //OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
-
-                // Since the game is not in the cart, proceed to add it
-                Game game = await dbContext.Games.FirstAsync(g => g.Id == Guid.Parse(gameId));
-
-                OrderGame newItem = new OrderGame
-                {
-                    OrderId = cart.Id,
-                    GameId = Guid.Parse(gameId),
-                    PriceAtPurchase = game.Price,
-                    IsActive = true
-                };
-
-                dbContext.OrderGames.Add(newItem);
-                await dbContext.SaveChangesAsync();
-				result.SetSuccess();
-            }
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-			}
-
-			return result;
+			dbContext.OrderGames.Add(newItem);
+			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task<OperationResult> RemoveItemFromCart(string userId, string gameId)
+		public async Task RemoveItemFromCart(string userId, string gameId)
 		{
-			OperationResult result = new();
-			try
-			{
-				Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
+			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
 
-				OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
+			OrderGame existingItem = cart.OrderGames.First(og => og.GameId == Guid.Parse(gameId));
 
-				dbContext.OrderGames.Remove(existingItem!);
+			dbContext.OrderGames.Remove(existingItem!);
 
-				await dbContext.SaveChangesAsync();
-
-				result.SetSuccess();
-			}
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-			}
-
-			return result;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<string> GetActivationCodeByUserAndGameIdAsync(string userId, string gameId)
@@ -204,100 +177,36 @@ namespace GameStoreHub.Services.Data
 			return allPurchasedGames;
 		}
 
-		public async Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model)
+		public async Task CreateOrderAsync(string userId, CheckoutViewModel model)
 		{
-			try
-			{
-				Order currrentOrder = await GetOrCreateCartForUserByUserIdAsync(userId);
-				currrentOrder.TotalPrice = currrentOrder.OrderGames.Sum(og => og.PriceAtPurchase);
-				currrentOrder.OrderStatus = OrderStatus.Completed;
-				currrentOrder.OrderDate = DateTime.Now;
-				currrentOrder.Address = model.BillingData.Address;
-				currrentOrder.PhoneNumber = model.BillingData.PhoneNumber;
-				currrentOrder.City = model.BillingData.City;
-				currrentOrder.Country = model.BillingData.Country;
-				currrentOrder.ZipCode = model.BillingData.ZipCode;
-				currrentOrder.OrderNotes = model.BillingData.OrderNotes;
-				OrderResult orderResult = new(currrentOrder.Id);
-				return orderResult;	
-			}
-			catch (Exception ex)
-			{
-				OrderResult orderResult = new(new List<string>()
-				{ 
-					ex.Message
-				});
-				return orderResult;
-			}
-
+			Order currrentOrder = await GetOrCreateCartForUserByUserIdAsync(userId);
+			currrentOrder.TotalPrice = currrentOrder.OrderGames.Sum(og => og.PriceAtPurchase);
+			currrentOrder.OrderStatus = OrderStatus.Completed;
+			currrentOrder.OrderDate = DateTime.Now;
+			currrentOrder.Address = model.BillingData.Address;
+			currrentOrder.PhoneNumber = model.BillingData.PhoneNumber;
+			currrentOrder.City = model.BillingData.City;
+			currrentOrder.Country = model.BillingData.Country;
+			currrentOrder.ZipCode = model.BillingData.ZipCode;
+			currrentOrder.OrderNotes = model.BillingData.OrderNotes;
 		}
 
-		public async Task<OperationResult> AssignActivationCodesToUserOrderByUserIdAsync(string userId)
+		public async Task AssignActivationCodesToUserOrderByUserIdAsync(string userId)
 		{
-			OperationResult result = new();
-			try
-			{
-				//Order order = await dbContext.Orders.FirstAsync(o => o.OrderGames.Any(og => og.GameId == Guid.Parse(gameId) && o.UserId == Guid.Parse(userId)));
-				//Order cart = await dbContext.Orders.FirstAsync(o => o.OrderGames.Any(og => og.GameId == Guid.Parse(gameId) && o.UserId == Guid.Parse(userId)));
-				List<Order> carts = await dbContext.Orders.Where(o => o.UserId == Guid.Parse(userId) && o.OrderStatus == OrderStatus.Completed).ToListAsync();
+			List<Order> carts = await dbContext.Orders.Where(o => o.UserId == Guid.Parse(userId) && o.OrderStatus == OrderStatus.Completed).ToListAsync();
 
-				foreach (var cart in carts)
+			foreach (var cart in carts)
+			{
+				foreach (var orderGame in cart.OrderGames)
 				{
-					foreach (var orderGame in cart.OrderGames)
+					if (orderGame.GameKey == null)
 					{
-						if (orderGame.GameKey == null)
-						{
-							orderGame.GameKey = GenerateActivationKeyForGame();
-						}
+						orderGame.GameKey = GenerateActivationKeyForGame();
 					}
 				}
-
-				await dbContext.SaveChangesAsync();
-
-				result.SetSuccess();
-			}
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
 			}
 
-			return result;
-		}
-		//Validation method below this comment!
-		//                |
-		//                V
-
-		public async Task<ValidationResult> ValidateCartByUserIdAsync(string userId, IEnumerable<CheckoutItemViewModel> cartItems)
-		{
-			var validationResult = new ValidationResult();
-
-			// Validate each cart item
-			foreach (var item in cartItems)
-			{
-				bool doesGameExist = await gameService.DoesGameExistByIdAsync(item.GameId.ToString());
-				if (!doesGameExist)
-				{
-					validationResult.Errors.Add($"Game {item.GameId} is no longer available.");
-					continue;
-				}
-
-				Game game = await gameService.GetGameByIdAsync(item.GameId.ToString());
-
-				if (!game.IsActive)
-				{
-					validationResult.Errors.Add($"Game {item.GameId} is no longer available.");
-					continue;
-				}
-
-				//if (item.PriceAtPurchase != game.Price)
-				//{
-				//	validationResult.Errors.Add($"Price for {game.Title} has changed.");
-				//	// Optionally adjust the cart item price here or mark it for review
-				//}
-			}
-
-			validationResult.IsValid = !validationResult.Errors.Any();
-			return validationResult;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<CheckoutItemViewModel>> GetCartItemsByUserIdAsync(string userId)

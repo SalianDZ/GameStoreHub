@@ -11,21 +11,19 @@ namespace GameStoreHub.Services.Data.Interfaces
 
 		Task<CheckoutViewModel> GetCartViewModelByUserIdAsync(string userId);
 
-		Task<ValidationResult> ValidateCartByUserIdAsync(string userId, IEnumerable<CheckoutItemViewModel> cartItems);
-
-		Task<OrderResult> CreateOrderAsync(string userId, CheckoutViewModel model);
+		Task CreateOrderAsync(string userId, CheckoutViewModel model);
 
 		Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId);
 
-		Task<OperationResult> AddItemToCart(string userId, string gameId);
+		Task AddItemToCart(string userId, string gameId);
 
-        Task<OperationResult> RemoveItemFromCart(string userId, string gameId);
+        Task RemoveItemFromCart(string userId, string gameId);
 
         Task<IEnumerable<CheckoutItemViewModel>> GetCartItemsByUserIdAsync(string userId);
 
 		Task<bool> IsGameInCartByIdAsync(string userId, string gameId);
 
-		Task<OperationResult> AssignActivationCodesToUserOrderByUserIdAsync(string userId);
+		Task AssignActivationCodesToUserOrderByUserIdAsync(string userId);
 
 		Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId);
 

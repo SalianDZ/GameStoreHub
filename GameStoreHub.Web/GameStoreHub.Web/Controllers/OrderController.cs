@@ -42,57 +42,51 @@ namespace GameStoreHub.Web.Controllers
 
 			string userId = User.GetId();
 
-			model.Items = await cartService.GetItemsForCheckoutByUserIdAsync(userId);
-
-			ValidationResult validationResult = await cartService.ValidateCartByUserIdAsync(userId, model.Items);
-
-			if (!validationResult.IsValid)
-			{
-				// Handle validation errors, e.g., by displaying them to the user
-				foreach (var error in validationResult.Errors)
-				{
-					ModelState.AddModelError(string.Empty, error);
-				}
-				return View(model);
-			}
 
 			// Check if the user has enough balance in the wallet
-			var userBalance = await userService.GetUserBalanceByIdAsync(userId);
-
-			if (userBalance < model.TotalPrice)
+			try
 			{
-				ModelState.AddModelError("", "Insufficient balance in your wallet.");
-				return View(model);
+				var userBalance = await userService.GetUserBalanceByIdAsync(userId);
+
+				if (userBalance < model.TotalPrice)
+				{
+					//Here tempdata can be added!
+					ModelState.AddModelError("", "Insufficient balance in your wallet.");
+					return View(model);
+				}
+			}
+			catch (Exception)
+			{
+				return BadRequest("An unexpected error occurred while processing your order. Please try again.");
 			}
 
 			try
 			{
 				// Process the order
-				var orderResult = await cartService.CreateOrderAsync(userId, model);
-				if (!orderResult.Success)
-				{
-					foreach (var errorMessage in orderResult.Errors)
-					{
-						ModelState.AddModelError("", errorMessage);
-					}
-
-					return View(model);
-				}
+				await cartService.CreateOrderAsync(userId, model);
 
 				// Deduct the total price from the user's wallet
-				OperationResult result = await userService.DeductBalanceByUserIdAsync(userId, model.TotalPrice);
+				bool result = await userService.DeductBalanceByUserIdAsync(userId, model.TotalPrice);
 
-				if (result.IsSuccess)
+				if (result)
 				{
 					await cartService.AssignActivationCodesToUserOrderByUserIdAsync(userId);
 
 					//TODO!!!
 					//return RedirectToAction("OrderConfirmation", new { orderId = orderResult.OrderId });
-					return Ok();
+					return RedirectToAction("OwnedGames", "Game");
+				}
+				else
+				{
+					//We must add tempdata here!
+					//There was a problem with the payment
+					return RedirectToAction("Index", "Home");
 				}
 			}
 			catch (Exception)
 			{
+				//We must add tempdata here
+				//return RedirectToAction("Index", ""Home")
 				// Log the exception
 				ModelState.AddModelError("", "An unexpected error occurred while processing your order. Please try again.");
 			}
@@ -119,15 +113,14 @@ namespace GameStoreHub.Web.Controllers
 				return BadRequest("You already have bought this game before!");
 			}
 
-            OperationResult result = await cartService.AddItemToCart(userId, id);
-
-            if (!result.IsSuccess)
-            {
-                foreach (var error in result.Errors)
-                {
-                    return BadRequest(error);
-                }
-            }
+			try
+			{
+				await cartService.AddItemToCart(userId, id);
+			}
+			catch (Exception)
+			{
+				return BadRequest("An error occured while adding item to the cart!");
+			}
 
             return RedirectToAction("Cart", "Order");
 		}
@@ -135,25 +128,25 @@ namespace GameStoreHub.Web.Controllers
 		[Authorize]
 		public async Task<IActionResult> RemoveFromCart(string id)
 		{
-            if (!await gameService.DoesGameExistByIdAsync(id))
+			string userId = User.GetId();
+
+			if (!await gameService.DoesGameExistByIdAsync(id))
             {
                 return BadRequest("Select a valid game!");
             }
 
-			if (!await cartService.IsGameInCartByIdAsync(User.GetId(), id))
+			if (!await cartService.IsGameInCartByIdAsync(userId, id))
 			{
 				return BadRequest("Selected game is already removed from the cart!");
 			}
 
-            string userId = User.GetId();
-            OperationResult result = await cartService.RemoveItemFromCart(userId, id);
-
-			if (!result.IsSuccess)
+			try
 			{
-				foreach (var error in result.Errors)
-				{
-					return BadRequest(error);
-				}
+				await cartService.RemoveItemFromCart(userId, id);
+			}
+			catch (Exception)
+			{
+				return BadRequest("An error occured while adding item to the cart!");
 			}
 
 			return RedirectToAction("Cart", "Order");
@@ -162,25 +155,24 @@ namespace GameStoreHub.Web.Controllers
 		[Authorize]
 		public async Task<IActionResult> RemoveFromIndexCart(string id)
 		{
+			string userId = User.GetId();
 			if (!await gameService.DoesGameExistByIdAsync(id))
 			{
 				return BadRequest("Select a valid game!");
 			}
 
-			if (!await cartService.IsGameInCartByIdAsync(User.GetId(), id))
+			if (!await cartService.IsGameInCartByIdAsync(userId, id))
 			{
 				return BadRequest("Selected game is already removed from the cart!");
 			}
 
-			string userId = User.GetId();
-			OperationResult result = await cartService.RemoveItemFromCart(userId, id);
-
-			if (!result.IsSuccess)
+			try
 			{
-				foreach (var error in result.Errors)
-				{
-					return BadRequest(error);
-				}
+				await cartService.RemoveItemFromCart(userId, id);
+			}
+			catch (Exception)
+			{
+				return BadRequest("An error occured while adding item to the cart!");
 			}
 
 			return RedirectToAction("Index", "Home");
@@ -190,9 +182,16 @@ namespace GameStoreHub.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Cart()
 		{
-            string userId = User.GetId();
-            CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
-            return View(model);
+			try
+			{
+				string userId = User.GetId();
+				CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
+				return View(model);
+			}
+			catch (Exception)
+			{
+				return BadRequest("An error occured while adding item to the cart!");
+			}
         }
 	}
 }

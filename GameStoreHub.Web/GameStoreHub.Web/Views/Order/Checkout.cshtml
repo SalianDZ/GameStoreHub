@@ -8,7 +8,6 @@
 			<!-- NAV -->
 			<ul class="main-nav nav navbar-nav">
 				<li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
-				<li><a>Hot Deals</a></li>
 				<li><a asp-controller="Category" asp-action="All">Categories</a></li>
 				<li><a asp-controller="Game" asp-action="OwnedGames">My Games</a></li>
 			</ul>
@@ -80,9 +79,6 @@
 					<textarea class="input" placeholder="Order Notes" asp-for="BillingData.OrderNotes"></textarea>
 						<span asp-validation-for="BillingData.OrderNotes" class="small text-danger"></span>
 				</div>
-				<div>
-					<input class="input" type="text" name="discount-code" placeholder="Discount code">
-				</div>
 				<!-- /Order notes -->
 			</div>
 
@@ -117,47 +113,14 @@
 							<div><strong class="order-total">$@Model.TotalPrice</strong></div>
 						</div>
 					</div>
-					<div class="payment-method">
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-1">
-							<label for="payment-1">
-								<span></span>
-								Credit or Debir Card
-							</label>
-							<div class="caption">
-								<p>You pay using your credit or debit card.</p>
-							</div>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-2">
-							<label for="payment-2">
-								<span></span>
-								Account balance
-							</label>
-							<div class="caption">
-								<p>You pay using your balance into your account.</p>
-							</div>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-3">
-							<label for="payment-3">
-								<span></span>
-								Paypal System
-							</label>
-							<div class="caption">
-								<p>You pay using your paypal account.</p>
-							</div>
-						</div>
-					</div>
 					<div class="input-checkbox">
 						<input type="checkbox" id="terms">
 						<label for="terms">
 							<span></span>
-							I've read and accept the <a href="#">terms & conditions</a>
-						</label>
+							I've read and accept the terms & conditions
+						</label> 
 					</div>
 						<input type="submit" class="primary-btn order-submit" value="Submit order">
-						@* <a href="#" class="primary-btn order-submit">Place order</a> *@
 				</div>
 				<!-- /Order Details -->
 			</form>
@@ -167,38 +130,3 @@
 	<!-- /container -->
 </div>
 <!-- /SECTION -->
-<!-- NEWSLETTER -->
-<div id="newsletter" class="section">
-	<!-- container -->
-	<div class="container">
-		<!-- row -->
-		<div class="row">
-			<div class="col-md-12">
-				<div class="newsletter">
-					<p>Sign Up for the <strong>NEWSLETTER</strong></p>
-					<form>
-						<input class="input" type="email" placeholder="Enter Your Email">
-						<button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
-					</form>
-					<ul class="newsletter-follow">
-						<li>
-							<a href="#"><i class="fa fa-facebook"></i></a>
-						</li>
-						<li>
-							<a href="#"><i class="fa fa-twitter"></i></a>
-						</li>
-						<li>
-							<a href="#"><i class="fa fa-instagram"></i></a>
-						</li>
-						<li>
-							<a href="#"><i class="fa fa-pinterest"></i></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!-- /row -->
-	</div>
-	<!-- /container -->
-</div>
-<!-- /NEWSLETTER -->

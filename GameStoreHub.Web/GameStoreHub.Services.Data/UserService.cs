@@ -17,22 +17,18 @@ namespace GameStoreHub.Services.Data
 			this.dbContext = dbContext;
         }
 
-		public async Task<OperationResult> DeductBalanceByUserIdAsync(string userId, decimal price)
+		public async Task<bool> DeductBalanceByUserIdAsync(string userId, decimal price)
 		{
-			OperationResult result = new OperationResult();
 			try
 			{
 				ApplicationUser user = await dbContext.Users.FirstAsync(u => u.Id == Guid.Parse(userId));
 				user.WalletBalance -= price;
 				await dbContext.SaveChangesAsync();
-
-				result.SetSuccess("The deduction has been successfull");
-				return result;
+				return true;
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				result.AddError(ex.Message);
-				return result;
+				return false;
 			}
 		}
 

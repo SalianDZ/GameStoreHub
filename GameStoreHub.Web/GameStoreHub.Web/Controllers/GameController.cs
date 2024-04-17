@@ -157,12 +157,8 @@ namespace GameStoreHub.Web.Controllers
 					}
 
 					string userId = User.GetId();
-					OperationResult databaseResult = await reviewService.AddReviewToGameByIdAsync(id, userId, model);
-
-					if (databaseResult.IsSuccess)
-					{
-						return RedirectToAction("Details", "Game", id);
-					}
+					await reviewService.AddReviewToGameByIdAsync(id, userId, model);
+					return RedirectToAction("Details", "Game", id);
 				}
 
 				detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
