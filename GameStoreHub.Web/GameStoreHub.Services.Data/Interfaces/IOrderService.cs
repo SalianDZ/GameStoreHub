@@ -13,8 +13,6 @@ namespace GameStoreHub.Services.Data.Interfaces
 
 		Task CreateOrderAsync(string userId, CheckoutViewModel model);
 
-		Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId);
-
 		Task AddItemToCart(string userId, string gameId);
 
         Task RemoveItemFromCart(string userId, string gameId);

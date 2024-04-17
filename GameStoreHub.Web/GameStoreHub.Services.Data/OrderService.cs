@@ -1,5 +1,4 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Data;
+﻿using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Data.Models.Enums;
 using GameStoreHub.Services.Data.Interfaces;
@@ -13,12 +12,9 @@ namespace GameStoreHub.Services.Data
 	{
 		private readonly GameStoreDbContext dbContext;
 
-		private readonly IGameService gameService;
-
-        public OrderService(GameStoreDbContext dbContext, IGameService gameService, IUserService userService)
+        public OrderService(GameStoreDbContext dbContext)
         {
             this.dbContext = dbContext;
-			this.gameService = gameService;
         }
 
 		public async Task<Order> GetOrCreateCartForUserByUserIdAsync(string userId)
@@ -105,6 +101,7 @@ namespace GameStoreHub.Services.Data
 			{
 				foreach (var game in currentCart.OrderGames.ToList())
 				{
+
 					if (game.GameId == Guid.Parse(gameId))
 					{
 						isGameAlreadyAdded = true;
@@ -133,21 +130,6 @@ namespace GameStoreHub.Services.Data
 			};
 
 			return model;
-		}
-
-		public async Task<IEnumerable<CheckoutItemViewModel>> GetItemsForCheckoutByUserIdAsync(string userId)
-		{
-			Order cart = await GetOrCreateCartForUserByUserIdAsync(userId);
-
-			IEnumerable<CheckoutItemViewModel> items = cart.OrderGames.Select(og => new CheckoutItemViewModel
-			{
-				GameId = og.GameId,
-				GameImagePath = og.Game.ImagePath,
-				GameTitle = og.Game.Title,
-				PriceAtPurchase = og.PriceAtPurchase
-			}).ToHashSet();
-
-			return items;
 		}
 
 		public async Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId)
@@ -189,6 +171,8 @@ namespace GameStoreHub.Services.Data
 			currrentOrder.Country = model.BillingData.Country;
 			currrentOrder.ZipCode = model.BillingData.ZipCode;
 			currrentOrder.OrderNotes = model.BillingData.OrderNotes;
+
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task AssignActivationCodesToUserOrderByUserIdAsync(string userId)
@@ -214,14 +198,17 @@ namespace GameStoreHub.Services.Data
 			Order order = await GetOrCreateCartForUserByUserIdAsync(userId);
 
 			IEnumerable<CheckoutItemViewModel> items =
-				order.OrderGames
+				order
+				.OrderGames
+				.Where(og => og.Order.OrderStatus == OrderStatus.InCart)
 				.Select(og => new CheckoutItemViewModel
 				{
 					GameId = og.GameId,
 					GameImagePath = og.Game.ImagePath,
 					GameTitle = og.Game.Title,
 					PriceAtPurchase = og.PriceAtPurchase
-				}).ToList();
+				})
+				.ToList();
 
 			return items;
 		}
