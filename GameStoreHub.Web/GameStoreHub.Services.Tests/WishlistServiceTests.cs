@@ -9,7 +9,7 @@ namespace GameStoreHub.Services.Tests
 	public class WishlistServiceTests
 	{
 		private GameStoreDbContext dbContext;
-		private WishlistService wishlistService;
+		private IWishlistService wishlistService;
 
 		[SetUp]
 		public void SetUp()
@@ -254,5 +254,6 @@ namespace GameStoreHub.Services.Tests
 			var result = await wishlistService.IsGameInWishlistByIdAsync(user.Id.ToString(), game.Id.ToString());
 			Assert.IsFalse(result);
 		}
+
 	}
 }

@@ -7,6 +7,6 @@ namespace GameStoreHub.Services.Data.Interfaces
 	{
 		Task<IEnumerable<ReviewViewModel>> GetAllReviewsOfGameByIdAsync(string gameId);
 
-		Task<OperationResult> AddReviewToGameByIdAsync(string gameId,string userId, ReviewFormModel model);
+		Task AddReviewToGameByIdAsync(string gameId,string userId, ReviewFormModel model);
 	}
 }

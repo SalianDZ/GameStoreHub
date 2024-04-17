@@ -1,6 +1,7 @@
 ﻿using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data;
+using GameStoreHub.Services.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Tests
@@ -8,7 +9,7 @@ namespace GameStoreHub.Services.Tests
 	public class GameServiceTests
 	{
 		private GameStoreDbContext dbContext;
-		private GameService gameService;
+		private IGameService gameService;
 
 		[SetUp]
 		public void SetUp()

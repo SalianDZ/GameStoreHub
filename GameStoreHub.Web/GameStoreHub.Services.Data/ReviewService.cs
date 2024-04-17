@@ -19,31 +19,20 @@ namespace GameStoreHub.Services.Data
 			this.gameService = gameService;
         }
 
-		public async Task<OperationResult> AddReviewToGameByIdAsync(string gameId,string userId, ReviewFormModel model)
+		public async Task AddReviewToGameByIdAsync(string gameId,string userId, ReviewFormModel model)
 		{
-			OperationResult result = new();
-			try
+			Game game = await gameService.GetGameByIdAsync(gameId);
+			Review review = new Review()
 			{
-				Game game = await gameService.GetGameByIdAsync(gameId);
-				Review review = new Review()
-				{
-					GameId = Guid.Parse(gameId),
-					UserId = Guid.Parse(userId),
-					Rating = model.Rating,
-					Comment = model.Comment,
-					DateCreated = DateTime.UtcNow
-				};
+				GameId = Guid.Parse(gameId),
+				UserId = Guid.Parse(userId),
+				Rating = model.Rating,
+				Comment = model.Comment,
+				DateCreated = DateTime.UtcNow
+			};
 
-				await dbContext.Reviews.AddAsync(review);
-				await dbContext.SaveChangesAsync();
-				result.SetSuccess();
-				return result;
-			}
-			catch (Exception)
-			{
-				result.AddError("An error occured while attempting to procced with the data!");
-				return result;
-			}
+			await dbContext.Reviews.AddAsync(review);
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<ReviewViewModel>> GetAllReviewsOfGameByIdAsync(string gameId)
