@@ -2,7 +2,10 @@
 Project Overview
 Type: Web store (similar in concept to platforms like Steam) for selling digital games.
 
-Connection to SQL: Please add your default connection string in the appsetting json.
+Before starting the app:
+- Please add your default connection string in the appsetting json.
+-There is no seeded user, when you enter you need to register from the form.
+-If you want to add funds, there is a button in the layout add funds, where you should only add the amount you want.(The other inputs are not included in the controller)
 
 Framework: ASP.NET Core MVC with Entity Framework Core for data management.
 
@@ -15,11 +18,10 @@ Entity Framework Core: Used for ORM to interact with the database, simplifying d
 Core Features
 User Accounts:
 Integration with ASP.NET Identity for user authentication and authorization.
-Features like registration, login, and user profile management.
+Features like registration, login, and user profile management. 
 
 Product Management:
-CRUD operations for games, including title, description, price, developer, and category.
-Image uploads for game covers.
+You can add, buy games and see their activation codes.
 
 Shopping Cart:
 Allows users to add games to their cart and remove items.
