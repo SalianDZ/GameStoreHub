@@ -86,7 +86,14 @@
 				<div class="hot-deal">
 					<h2 class="text-uppercase" style="color:white;">Embark on Epic Adventures</h2>
 					<p style="color:white;">Unleash the hero within and dive into a realm where fantasy and reality collide. </p>
-					<a class="primary-btn cta-btn" asp-controller="User" asp-action="Register">Sign up now</a>
+					@if (!User.Identity.IsAuthenticated)
+					{
+						<a class="primary-btn cta-btn" asp-controller="User" asp-action="Register">Sign up now</a>
+					}
+					else
+					{
+						<a class="primary-btn cta-btn" asp-controller="Game" asp-action="Add">Add a game</a>
+					}
 				</div>
 			</div>
 		</div>

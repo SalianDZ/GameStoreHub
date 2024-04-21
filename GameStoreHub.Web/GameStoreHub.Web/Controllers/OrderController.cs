@@ -46,6 +46,7 @@ namespace GameStoreHub.Web.Controllers
 			// Check if the user has enough balance in the wallet
 			try
 			{
+				model.Items = await cartService.GetCartItemsByUserIdAsync(userId);
 				var userBalance = await userService.GetUserBalanceByIdAsync(userId);
 
 				if (userBalance < model.TotalPrice)
