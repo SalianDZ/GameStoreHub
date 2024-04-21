@@ -24,10 +24,42 @@ namespace GameStoreHub.Web.Controllers
 			this.categoryService = categoryService;
         }
             
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(decimal? minPrice, decimal? maxPrice)
         {
             IEnumerable<GamesViewModel> allGames = await gameService.GetAllGames();
-            return View(allGames);
+
+			if (minPrice.HasValue && minPrice <= 0)
+			{
+				ModelState.AddModelError("minPrice", "Minimum price must be greater than or equal to 0.");
+			}
+
+			if (maxPrice.HasValue && maxPrice > 10000)
+			{
+				ModelState.AddModelError("maxPrice", "Maximum price must not exceed 10,000.");
+			}
+
+			if (minPrice.HasValue && maxPrice.HasValue && minPrice > maxPrice)
+			{
+				ModelState.AddModelError("minPrice", "Minimum price cannot be greater than maximum price.");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				// Optionally, you can pass the form back with previously entered values
+				return View(allGames);
+			}
+
+			if (minPrice.HasValue)
+            {
+				allGames = allGames.Where(g => Decimal.Parse(g.Price) >= minPrice);
+			}
+
+            if (maxPrice.HasValue)
+            {
+				allGames = allGames.Where(g => Decimal.Parse(g.Price) <= maxPrice);
+			}
+
+			return View(allGames);
         }
 
         public async Task<IActionResult> Search(string query)
