@@ -70,5 +70,12 @@
 			public const int PasswordMinLength = 6;
 			public const int PasswordMaxLength = 100;
 		}
+
+		public static class GeneralApplicationConstants
+		{
+			public const string AdminRoleName = "Administrator";
+			public const string DevelopmentAdminEmail = "admin@gamefinity.com";
+		}
     }
 }
+ 

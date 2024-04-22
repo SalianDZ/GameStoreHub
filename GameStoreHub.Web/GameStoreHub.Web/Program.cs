@@ -2,8 +2,11 @@ using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data;
 using GameStoreHub.Services.Data.Interfaces;
+using GameStoreHub.Web.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static GameStoreHub.Common.EntityValidationConstants.GeneralApplicationConstants;
 
 namespace GameStoreHub.Web
 {
@@ -29,7 +32,9 @@ namespace GameStoreHub.Web
 					builder.Configuration.GetValue<bool>("Password:SignIn:RequireUppercase");
 				options.Password.RequireLowercase = 
 					builder.Configuration.GetValue<bool>("Password:SignIn:RequireLowercase");
-			}).AddEntityFrameworkStores<GameStoreDbContext>();
+			})
+				.AddRoles<IdentityRole<Guid>>()
+				.AddEntityFrameworkStores<GameStoreDbContext>();
 
 			builder.Services.AddScoped<ICategoryService, CategoryService>();
 			builder.Services.AddScoped<IGameService, GameService>();
@@ -72,6 +77,8 @@ namespace GameStoreHub.Web
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.SeedAdministrator(DevelopmentAdminEmail);
 
 			app.MapControllerRoute(
 				name: "default",
