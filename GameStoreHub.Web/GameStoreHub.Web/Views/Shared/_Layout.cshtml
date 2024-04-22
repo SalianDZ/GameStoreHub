@@ -53,6 +53,11 @@
 	<link type="text/css" rel="stylesheet" href="~/css/style.css" />
 	<link type="text/css" rel="stylesheet" href="~/css/add-funds.css" />
 
+
+	<script src="~/js/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -62,6 +67,7 @@
 
 </head>
 	<body>
+		<partial name="_NotificationsPartial"></partial>
 		<!-- HEADER -->
 		<header>
 			<!-- TOP HEADER -->
@@ -342,8 +348,6 @@
 	</footer>
 	<!-- /FOOTER -->
 	<!-- jQuery Plugins -->
-	<script src="~/js/jquery.min.js"></script>
-	@* <script src="~/js/bootstrap.bundle.min.js"></script> *@
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

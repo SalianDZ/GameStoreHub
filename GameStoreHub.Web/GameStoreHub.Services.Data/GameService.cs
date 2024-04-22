@@ -4,6 +4,8 @@ using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
 using Microsoft.EntityFrameworkCore;
 using GameStoreHub.Data.Models.Enums;
+using GameStoreHub.Services.Data.Models.Game;
+using GameStoreHub.Web.ViewModels.Game.Enums;
 
 namespace GameStoreHub.Services.Data
 {
@@ -41,7 +43,8 @@ namespace GameStoreHub.Services.Data
 					Title = g.Title,
 					Category = g.Category.Name,
 					Price = g.Price.ToString(),
-					ImagePath = g.ImagePath
+					ImagePath = g.ImagePath,
+					ReleaseDate = g.ReleaseDate
 				}).ToArrayAsync();
 
 			return allGamesFromCategory;
@@ -59,7 +62,8 @@ namespace GameStoreHub.Services.Data
 					Title = g.Title,
 					Category = g.Category.Name,
 					Price = g.Price.ToString(),
-					ImagePath = g.ImagePath
+					ImagePath = g.ImagePath,
+					ReleaseDate = g.ReleaseDate
 				}).ToArrayAsync();
 
 			return allGamesFromCategory;
@@ -124,7 +128,8 @@ namespace GameStoreHub.Services.Data
 				Title = g.Title,
 				Category = g.Category.Name,
 				Price = g.Price.ToString(),
-				ImagePath = g.ImagePath
+				ImagePath = g.ImagePath,
+				ReleaseDate = g.ReleaseDate
 			}).ToArrayAsync();
 
 			return model;
@@ -141,7 +146,8 @@ namespace GameStoreHub.Services.Data
 					Price = g.Price.ToString(),
 					ImagePath = g.ImagePath,
 					Category = g.Category.Name,
-					Title = g.Title
+					Title = g.Title,
+					ReleaseDate= g.ReleaseDate
 				}).ToListAsync();
 
 			return games;
@@ -174,10 +180,52 @@ namespace GameStoreHub.Services.Data
 					Title = g.Title,
 					Price = g.Price.ToString(),
 					Category = g.Category.Name,
-					ImagePath = g.ImagePath
+					ImagePath = g.ImagePath,
+					ReleaseDate = g.ReleaseDate
 				}).ToArrayAsync();
 
 			return allGames;
 		}
-    }
+
+		public async Task<AllGamesFilteredAndPagedServiceModel> AllAsync(AllGamesQueryModel queryModel)
+		{
+			IQueryable<Game> gamesQuery = dbContext.Games
+				.Include(g => g.Category)
+				.Where(g => g.IsActive).AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(queryModel.Category))
+			{
+				gamesQuery = gamesQuery.Where(g => g.Category.Name == queryModel.Category);
+			}
+
+			gamesQuery = queryModel.GameSorting switch
+			{ 
+				GameSorting.Newest => gamesQuery.OrderBy(g => g.ReleaseDate),
+				GameSorting.Oldest => gamesQuery.OrderByDescending(g => g.ReleaseDate),
+				GameSorting.PriceAscending => gamesQuery.OrderBy(g => g.Price),
+				GameSorting.PriceDescending => gamesQuery.OrderByDescending(g => g.Price),
+				_ => gamesQuery
+			};
+
+			IEnumerable<GamesViewModel> allGames = await gamesQuery.Skip((queryModel.CurrentPage - 1) * queryModel.GamesPerPage)
+				.Take(queryModel.GamesPerPage)
+				.Select(g => new GamesViewModel()
+				{
+					Id = g.Id,
+					Title = g.Title,
+					ReleaseDate = g.ReleaseDate,
+					ImagePath = g.ImagePath,
+					Price = g.Price.ToString(),
+					Category = g.Category.Name
+				}).ToArrayAsync();
+
+			int totalGames = gamesQuery.Count();
+
+			return new AllGamesFilteredAndPagedServiceModel()
+			{
+				TotalGamesCount = totalGames,
+				Games = allGames
+			};
+		}
+	}
 }

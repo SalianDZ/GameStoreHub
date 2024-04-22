@@ -14,7 +14,16 @@ namespace GameStoreHub.Services.Data
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync()
+		public async Task<IEnumerable<string>> AllCategoryNamesAsync()
+		{
+			IEnumerable<string> allNames = await dbContext.Categories.Where(c => c.IsActive)
+				.Select(c => c.Name)
+				.ToArrayAsync();
+
+			return allNames;
+		}
+
+		public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync()
 		{
 			IEnumerable<CategoryViewModel> allCategories = await dbContext.Categories.Where(c => c.IsActive).Select(c => new CategoryViewModel
 			{

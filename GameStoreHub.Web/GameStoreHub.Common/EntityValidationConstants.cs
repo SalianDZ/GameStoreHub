@@ -75,6 +75,9 @@
 		{
 			public const string AdminRoleName = "Administrator";
 			public const string DevelopmentAdminEmail = "admin@gamefinity.com";
+
+			public const int DefaultPage = 1;
+			public const int EntitiesPerPage = 3;
 		}
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GameStoreHub.Common\GameStoreHub.Common.csproj" />
+    <ProjectReference Include="..\GameStoreHub.Web.ViewModels\GameStoreHub.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

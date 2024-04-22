@@ -1,4 +1,5 @@
 ﻿using GameStoreHub.Data.Models;
+using GameStoreHub.Services.Data.Models.Game;
 using GameStoreHub.Web.ViewModels.Game;
 
 namespace GameStoreHub.Services.Data.Interfaces
@@ -22,6 +23,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<GamesViewModel>> GetRelatedGamesByCategoryIdAsync(int categoryId, string gameId);
 		Task AddGameAsync(GameFormViewModel model);
 		Task<IEnumerable<GamesViewModel>> GetAllGames();
+		Task<AllGamesFilteredAndPagedServiceModel> AllAsync(AllGamesQueryModel queryModel);
 
 
 	}

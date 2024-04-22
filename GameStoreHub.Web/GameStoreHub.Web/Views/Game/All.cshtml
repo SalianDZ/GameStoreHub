@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GamesViewModel>
+﻿@model AllGamesQueryModel
 <!-- NAVIGATION -->
 <nav id="navigation">
 	<!-- container -->
@@ -16,7 +16,7 @@
 		</div>
 		<!-- /responsive-nav -->
 	</div>
-	<!-- /container -->
+  	<!-- /container -->
 </nav>
 <!-- /NAVIGATION -->
 <!-- BREADCRUMB -->
@@ -47,31 +47,48 @@
 			<div id="aside" class="col-md-3">
 				<!-- aside Widget -->
 				<div class="aside">
-					@* <h3 class="aside-title">Price</h3>
-					<div class="price-filter">
-						<div id="price-slider"></div>
-						<div class="input-number price-min">
-							<input id="price-min" type="number">
-							<span class="qty-up">+</span>
-							<span class="qty-down">-</span>
-						</div>
-						<span>-</span>
-						<div class="input-number price-max">
-							<input id="price-max" type="number">
-							<span class="qty-up">+</span>
-							<span class="qty-down">-</span>
-						</div>
-					</div> *@
 					<form asp-controller="Game" asp-action="All" method="get">
-						<div class="form-group">
-							<label for="minPrice">Minimum Price:</label>
-							<input type="number" name="minPrice" class="form-control" id="minPrice" placeholder="Enter minimum price">
+							<div class="form-group">
+								<label asp-for="Category"></label>
+								<select asp-for="Category" class="form-control">
+									<option value="">All</option>
+									@foreach (var category in Model.Categories)
+									{
+										<option value="@category">@category</option>
+									}
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label asp-for="GameSorting"></label>
+								<select asp-for="GameSorting" class="form-control">
+									<option value="0">Newest</option>
+									<option value="1">Oldest</option>
+									<option value="2">Price (Ascending)</option>
+									<option value="3">Price (Descending)</option>
+								</select>
+							</div>
+
+						<!-- store top filter -->
+						<div class="store-filter clearfix">
+							<div class="store-sort">
+								<label>
+									Show:
+									<select asp-for="GamesPerPage" class="input-select">
+										<option value="3">3</option>
+										<option value="6">6</option>
+										<option value="9">9</option>
+									</select>
+								</label>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="maxPrice">Maximum Price:</label>
-							<input type="number" name="maxPrice" class="form-control" id="maxPrice" placeholder="Enter maximum price">
+						<!-- /store top filter -->
+
+						<div class="col-md-3">
+							<div class="form-group mt-4 p-2">
+								<input type="submit" value="Search" class="btn btn-primary"/>
+							</div>
 						</div>
-						<button type="submit" class="btn btn-primary">Filter</button>
 					</form>
 				</div>
 				<!-- /aside Widget -->
@@ -87,67 +104,79 @@
 			<!-- /ASIDE -->
 			<!-- STORE -->
 			<div id="store" class="col-md-9">
-				<!-- store top filter -->
-				<div class="store-filter clearfix">
-					<div class="store-sort">
-						<label>
-							Show:
-							<select class="input-select">
-								<option value="0">9</option>
-								<option value="1">18</option>
-							</select>
-						</label>
-					</div>
-				</div>
-				<!-- /store top filter -->
 				<!-- store products -->
 				<div class="row">
-					@foreach (var game in Model)
+					@if (!Model.Games.Any())
 					{
-						<!-- product -->
-						<div class="col-md-4 col-xs-6">
-							<div class="product">
-								<div class="product-img">
-									<img src="@Url.Content($"~/{game.ImagePath}")" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">@game.Category</p>
-									<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@game.Id">@game.Title</a></h3>
-									<h4 class="product-price">$@game.Price</h4>
-									<div class="product-rating">
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
+						<h2 class="text-center">No houses found by the given criteria!</h2>
+					}
+					else
+					{
+						@foreach (var game in Model.Games)
+						{
+							<!-- product -->
+							<div class="col-md-4 col-xs-6">
+								<div class="product">
+									<div class="product-img">
+										<img src="@Url.Content($"~/{game.ImagePath}")" alt="">
 									</div>
-									<div class="product-btns">
-										<button class="add-to-wishlist"><a asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@game.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a></button>
+									<div class="product-body">
+										<p class="product-category">@game.Category</p>
+										<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@game.Id">@game.Title</a></h3>
+										<h4 class="product-price">$@game.Price</h4>
+										<div class="product-rating">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="product-btns">
+											<button class="add-to-wishlist"><a asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@game.Id"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></a></button>
+										</div>
 									</div>
-								</div>
-								<div class="add-to-cart">
-									<a asp-controller="Order" asp-action="AddToCart" asp-route-id="@game.Id.ToString()"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>add to cart</button></a>
+									<div class="add-to-cart">
+										<a asp-controller="Order" asp-action="AddToCart" asp-route-id="@game.Id.ToString()"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>add to cart</button></a>
+									</div>
 								</div>
 							</div>
-						</div>
-						<!-- /product -->
+							<!-- /product -->
+						}
 					}
 				</div>
 				<!-- /store products -->
 				<!-- store bottom filter -->
-				@if (Model.Count() > 9)
-				{
-					<div class="store-filter clearfix">
-						<span class="store-qty">Showing 20-100 products</span>
-						<ul class="store-pagination">
-							<li class="active">1</li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-						</ul>
-					</div>
+				@{
+					int previousPage = Model.CurrentPage - 1;
+					if (previousPage < 1)
+					{
+						previousPage = 1;
+					}
+
+					int maxPage = (int)Math.Ceiling((double)Model.TotalGames / Model.GamesPerPage);
 				}
+				<div class="row mb-5">
+					<div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-start">
+						<a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+						   asp-controller="Game"
+						   asp-action="All"
+						   asp-route-currentPage="@previousPage"
+						   asp-route-category="@Model.Category"
+						   asp-route-sorting="@((int)Model.GameSorting)"><<</a>
+					</div>
+					@{
+						var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
+						!Model.Games.Any();
+					}
+					<div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
+						<a class="btn btn-primary @(shouldButtonBeDisabled ? "disabled" : string.Empty)"
+						   asp-controller="Game"
+						   asp-action="All"
+						   asp-route-currentPage="@(Model.CurrentPage + 1)"
+						   asp-route-category="@Model.Category"
+						   asp-route-sorting="@((int)Model.GameSorting)">>></a>
+					</div>
+				</div>
 				<!-- /store bottom filter -->
 			</div>
 			<!-- /STORE -->

@@ -11,5 +11,7 @@
         public string Category { get; set; } = null!;
 
         public string ImagePath { get; set; } = null!;
+
+        public DateTime ReleaseDate { get; set; }
     }
 }
