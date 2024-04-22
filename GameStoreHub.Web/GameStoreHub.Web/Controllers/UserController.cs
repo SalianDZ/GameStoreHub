@@ -1,5 +1,4 @@
 ﻿using GameStoreHub.Data.Models;
-using GameStoreHub.Services.Data;
 using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.User;
@@ -7,11 +6,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using static GameStoreHub.Common.NotificationMessagesConstants;
 
 namespace GameStoreHub.Web.Controllers
 {
-	public class UserController : Controller
+    public class UserController : Controller
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
@@ -28,7 +27,7 @@ namespace GameStoreHub.Web.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -38,7 +37,7 @@ namespace GameStoreHub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterFormModel model)
         {
-			if (User.Identity.IsAuthenticated)
+			if (User.Identity!.IsAuthenticated)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -74,7 +73,7 @@ namespace GameStoreHub.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string? returnUrl = null)
         {
-			if (User.Identity.IsAuthenticated)
+			if (User.Identity!.IsAuthenticated)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -90,7 +89,7 @@ namespace GameStoreHub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginFormModel model)
         {
-			if (User.Identity.IsAuthenticated)
+			if (User.Identity!.IsAuthenticated)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -122,7 +121,7 @@ namespace GameStoreHub.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> AddFunds()
+        public IActionResult AddFunds()
         {
             return View();
         }
@@ -132,22 +131,23 @@ namespace GameStoreHub.Web.Controllers
 		public async Task<IActionResult> AddFunds(decimal amount)
 		{
             string userId = User.GetId();
-            if (amount <= 0 || amount >= 1000)
+            if (amount <= 0 || amount > 10000)
             {
-				//Tempdata
+                TempData[ErrorMessage] = "Please insert a valid amount!";
                 return RedirectToAction("Index", "Home");
 			}
 
 			try
             {
                 await userService.IncreaseUserBalance(userId, amount);
-			}
+                TempData[SuccessMessage] = "The transaction has been successfull!";
+                return RedirectToAction("Index", "Home");
+            }
             catch (Exception)
             {
-                //Tempdata
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
             }
-
-            return RedirectToAction("Index", "Home");
 		}
 	}
 }
