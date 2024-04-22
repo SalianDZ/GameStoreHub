@@ -21,10 +21,16 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<GamesViewModel>> GetSearchedGames(string query);
 
 		Task<IEnumerable<GamesViewModel>> GetRelatedGamesByCategoryIdAsync(int categoryId, string gameId);
+
 		Task AddGameAsync(GameFormViewModel model);
+
 		Task<IEnumerable<GamesViewModel>> GetAllGames();
+
 		Task<AllGamesFilteredAndPagedServiceModel> AllAsync(AllGamesQueryModel queryModel);
 
+		Task<GameFormViewModel> GetGameForEditByIdAsync(string id);
 
-	}
+		Task EditHouseByIdAsync(GameFormViewModel model, string id);
+
+    }
 }

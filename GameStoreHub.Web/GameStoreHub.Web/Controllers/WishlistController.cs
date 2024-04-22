@@ -9,13 +9,11 @@ namespace GameStoreHub.Web.Controllers
     public class WishlistController : Controller
 	{
 		private readonly IWishlistService wishlistService;
-		private readonly IUserService userService;
 		private readonly IGameService gameService;
 
-		public WishlistController(IWishlistService wishlistService, IUserService userService, IGameService gameService)
+		public WishlistController(IWishlistService wishlistService, IGameService gameService)
 		{
 			this.wishlistService = wishlistService;
-			this.userService = userService;
 			this.gameService = gameService;
 		}
 

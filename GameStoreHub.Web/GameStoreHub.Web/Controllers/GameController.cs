@@ -126,7 +126,8 @@ namespace GameStoreHub.Web.Controllers
 				string userId = User.GetId();
 				if (!await cartService.IsGameAlreadyBoughtBefore(userId, id))
 				{
-					return BadRequest("You do not have access to this game!");
+                    TempData[ErrorMessage] = "You do not have access to this game!";
+                    return RedirectToAction("OwnedGames", "Game");
 				}
 				string actCode = await cartService.GetActivationCodeByUserAndGameIdAsync(userId, id);
 				return Ok(actCode);
@@ -160,7 +161,8 @@ namespace GameStoreHub.Web.Controllers
 				bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 				if (id == null || !doesGameExist)
 				{
-					return StatusCode(404);
+                    TempData[ErrorMessage] = "Please select a valid game!";
+                    return RedirectToAction("All", "Game");
 				}
 
 				GameDetailsViewModel model = await gameService.GetGameViewModelForDetailsByIdAsync(id);
@@ -285,6 +287,72 @@ namespace GameStoreHub.Web.Controllers
                 ModelState.AddModelError(string.Empty, "Unexpected error occured while adding your new house. Please try again later or contact administrator");
                 model.Categories = await categoryService.GetAllCategoriesAsync();
                 return View(model);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (id == null || !doesGameExist)
+            {
+                TempData[ErrorMessage] = "This game does not exist!";
+                return RedirectToAction("All", "Game");
+            }
+
+            if (!User.isAdmin())
+            {
+                TempData[ErrorMessage] = "You do not have access to this page!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            try
+            {
+                GameFormViewModel model = await gameService.GetGameForEditByIdAsync(id);
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+                return View(model);
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(GameFormViewModel model, string id)
+        {
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (id == null || !doesGameExist)
+            {
+                TempData[ErrorMessage] = "This game does not exist!";
+                return RedirectToAction("All", "Game");
+            }
+
+            if (!User.isAdmin())
+            {
+                TempData[ErrorMessage] = "You do not have access to this page!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+                return View(model);
+            }
+
+            try
+            {
+                await gameService.EditHouseByIdAsync(model, id);
+                TempData[SuccessMessage] = "You have successfully edited the game!";
+                return RedirectToAction("All", "Game");
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("All", "Game");
             }
         }
     }

@@ -227,5 +227,38 @@ namespace GameStoreHub.Services.Data
 				Games = allGames
 			};
 		}
-	}
+
+        public async Task<GameFormViewModel> GetGameForEditByIdAsync(string id)
+        {
+			Game game = await dbContext.Games.Include(g => g.Category)
+				.Where(g => g.IsActive && g.Id == Guid.Parse(id))
+				.FirstAsync();
+
+			return new GameFormViewModel()
+			{ 
+				Title = game.Title,
+				Description = game.Description,
+				Developer = game.Developer,
+				ImagePath= game.ImagePath,
+				Price = game.Price,
+				ReleaseDate= game.ReleaseDate,
+				CategoryId = game.CategoryId
+			};
+        }
+
+        public async Task EditHouseByIdAsync(GameFormViewModel model, string id)
+        {
+			Game game = await dbContext.Games.Where(g => g.IsActive).FirstAsync(g => g.Id == Guid.Parse(id));
+
+			game.Title = model.Title;
+			game.Description = model.Description;
+			game.Developer = model.Developer;
+			game.ImagePath = model.ImagePath;
+			game.Price = model.Price;
+			game.ReleaseDate = model.ReleaseDate;
+			game.CategoryId = model.CategoryId;
+
+			await dbContext.SaveChangesAsync();
+        }
+    }
 }
