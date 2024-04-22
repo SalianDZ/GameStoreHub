@@ -1,15 +1,13 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Services.Data;
-using GameStoreHub.Services.Data.Interfaces;
+﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static GameStoreHub.Common.NotificationMessagesConstants;
 
 namespace GameStoreHub.Web.Controllers
 {
-	public class OrderController : Controller
+    public class OrderController : Controller
 	{
 		private readonly IOrderService cartService;
 		private readonly IUserService userService;
@@ -26,9 +24,17 @@ namespace GameStoreHub.Web.Controllers
 		[Authorize]
         public async Task<IActionResult> Checkout()
 		{
-			string userId = User.GetId();
-			CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
-			return View(model);
+			try
+			{
+                string userId = User.GetId();
+                CheckoutViewModel model = await cartService.GetCartViewModelByUserIdAsync(userId);
+                return View(model);
+            }
+			catch (Exception)
+			{
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
+            }
 		}
 
 		[HttpPost]
@@ -51,15 +57,15 @@ namespace GameStoreHub.Web.Controllers
 
 				if (userBalance < model.TotalPrice)
 				{
-					//Here tempdata can be added!
-					ModelState.AddModelError("", "Insufficient balance in your wallet.");
-					return View(model);
-				}
+                    TempData[ErrorMessage] = "Insufficient balance in your wallet!";
+                    return RedirectToAction("Checkout", "Order");
+                }
 			}
 			catch (Exception)
 			{
-				return BadRequest("An unexpected error occurred while processing your order. Please try again.");
-			}
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
+            }
 
 			try
 			{
@@ -72,25 +78,20 @@ namespace GameStoreHub.Web.Controllers
 				if (result)
 				{
 					await cartService.AssignActivationCodesToUserOrderByUserIdAsync(userId);
-
-					//TODO!!!
-					//return RedirectToAction("OrderConfirmation", new { orderId = orderResult.OrderId });
-					return RedirectToAction("OwnedGames", "Game");
+                    TempData[SuccessMessage] = "You have succesfully purchased this game!";
+                    return RedirectToAction("OwnedGames", "Game");
 				}
 				else
 				{
-					return BadRequest("There was problem with the payment!");
-				}
+                    TempData[ErrorMessage] = "An unexpected error occurred while processing with your transaction! Please try again.";
+                    return RedirectToAction("OwnedGames", "Game");
+                }
 			}
 			catch (Exception)
 			{
-				//We must add tempdata here
-				//return RedirectToAction("Index", ""Home")
-				// Log the exception
-				ModelState.AddModelError("", "An unexpected error occurred while processing your order. Please try again.");
+				TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+				return RedirectToAction("Index", "Home");
 			}
-
-			return View(model);
 		}
 
         [Authorize]
@@ -99,29 +100,32 @@ namespace GameStoreHub.Web.Controllers
 			string userId = User.GetId();
 			if (!await gameService.DoesGameExistByIdAsync(id))
 			{
-				return BadRequest("Select a valid game");
+				TempData[ErrorMessage] = "Select a valid game!";
+				return RedirectToAction("Index", "Home");
 			}
 
             if (await cartService.IsGameInCartByIdAsync(userId, id))
             {
-                return BadRequest("Selected game is already in the cart!");
+                TempData[ErrorMessage] = "Selected game is already in the cart!";
+                return RedirectToAction("Index", "Home");
             }
 
 			if (await cartService.IsGameAlreadyBoughtBefore(userId, id))
 			{
-				return BadRequest("You already have bought this game before!");
-			}
+                TempData[ErrorMessage] = "You have already bought this game before!";
+                return RedirectToAction("Index", "Home");
+            }
 
 			try
 			{
 				await cartService.AddItemToCart(userId, id);
-			}
+                return RedirectToAction("Cart", "Order");
+            }
 			catch (Exception)
 			{
-				return BadRequest("An error occured while adding item to the cart!");
-			}
-
-            return RedirectToAction("Cart", "Order");
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
 		}
 
 		[Authorize]
@@ -131,24 +135,27 @@ namespace GameStoreHub.Web.Controllers
 
 			if (!await gameService.DoesGameExistByIdAsync(id))
             {
-                return BadRequest("Select a valid game!");
+                TempData[ErrorMessage] = "Select a valid game!";
+                return RedirectToAction("Cart", "Order");
             }
 
 			if (!await cartService.IsGameInCartByIdAsync(userId, id))
 			{
-				return BadRequest("Selected game is already removed from the cart!");
+                TempData[ErrorMessage] = "Selected game is not into your cart!";
+                return RedirectToAction("Cart", "Order");
 			}
 
 			try
 			{
 				await cartService.RemoveItemFromCart(userId, id);
-			}
+                return RedirectToAction("Cart", "Order");
+            }
 			catch (Exception)
 			{
-				return BadRequest("An error occured while adding item to the cart!");
-			}
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
 
-			return RedirectToAction("Cart", "Order");
         }
 
 		[Authorize]
@@ -157,24 +164,27 @@ namespace GameStoreHub.Web.Controllers
 			string userId = User.GetId();
 			if (!await gameService.DoesGameExistByIdAsync(id))
 			{
-				return BadRequest("Select a valid game!");
-			}
+                TempData[ErrorMessage] = "Select a valid game!";
+                return RedirectToAction("Cart", "Order");
+            }
 
 			if (!await cartService.IsGameInCartByIdAsync(userId, id))
 			{
-				return BadRequest("Selected game is already removed from the cart!");
-			}
+                TempData[ErrorMessage] = "Selected game is not into your cart!";
+                return RedirectToAction("Cart", "Order");
+            }
 
 			try
 			{
 				await cartService.RemoveItemFromCart(userId, id);
-			}
+                return RedirectToAction("Index", "Home");
+            }
 			catch (Exception)
 			{
-				return BadRequest("An error occured while adding item to the cart!");
-			}
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
 
-			return RedirectToAction("Index", "Home");
 		}
 
 		[Authorize]
@@ -189,8 +199,9 @@ namespace GameStoreHub.Web.Controllers
 			}
 			catch (Exception)
 			{
-				return BadRequest("An error occured while adding item to the cart!");
-			}
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
         }
 	}
 }
