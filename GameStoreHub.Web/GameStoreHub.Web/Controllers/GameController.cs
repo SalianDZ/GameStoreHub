@@ -25,19 +25,29 @@ namespace GameStoreHub.Web.Controllers
             this.cartService = cartService;
 			this.categoryService = categoryService;
         }
-            
+
+		[AllowAnonymous]
         public async Task<IActionResult> All([FromQuery]AllGamesQueryModel queryModel)
         {
-			AllGamesFilteredAndPagedServiceModel serviceModel =
+			try
+			{
+                AllGamesFilteredAndPagedServiceModel serviceModel =
 				await gameService.AllAsync(queryModel);
 
-			queryModel.Games = serviceModel.Games;
-			queryModel.TotalGames = serviceModel.TotalGamesCount;
-			queryModel.Categories = await categoryService.AllCategoryNamesAsync();
+                queryModel.Games = serviceModel.Games;
+                queryModel.TotalGames = serviceModel.TotalGamesCount;
+                queryModel.Categories = await categoryService.AllCategoryNamesAsync();
 
-			return View(queryModel);
-		}
+                return View(queryModel);
+            }
+			catch (Exception)
+			{
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+				return RedirectToAction("All", "Game");
+            }
+        }
 
+		[AllowAnonymous]
         public async Task<IActionResult> Search(string query, decimal? minPrice, decimal? maxPrice)
         {
 			try
@@ -86,7 +96,8 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -102,7 +113,8 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -121,7 +133,8 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("OwnedGames", "Game");
             }
         }
 
@@ -134,7 +147,8 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -162,7 +176,8 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -175,8 +190,9 @@ namespace GameStoreHub.Web.Controllers
 				bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 				if (id == null || !doesGameExist)
 				{
-					return NotFound();
-				}
+                    TempData[ErrorMessage] = "This game does not exist!";
+                    return RedirectToAction("All", "Game");
+                }
 
 				GameDetailsAndReviewFormViewModel detailsModel = new();
 				if (model != null)
@@ -200,7 +216,8 @@ namespace GameStoreHub.Web.Controllers
 
 					string userId = User.GetId();
 					await reviewService.AddReviewToGameByIdAsync(id, userId, model);
-					return RedirectToAction("Details", "Game", id);
+                    TempData[SuccessMessage] = "You have successfully added a review!";
+                    return RedirectToAction("Details", "Game", id);
 				}
 
 				detailsModel.GameDetailsPage = await gameService.GetGameViewModelForDetailsByIdAsync(id);
@@ -209,11 +226,13 @@ namespace GameStoreHub.Web.Controllers
 			}
             catch (Exception)
             {
-                return StatusCode(500);
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
             }
 		}
 
 		[Authorize]
+		[HttpGet]
 		public async Task<IActionResult> Add()
 		{
 			string userId = User.GetId();
@@ -225,15 +244,16 @@ namespace GameStoreHub.Web.Controllers
 
 				GameFormViewModel house = new()
 				{
-					Categories = categories,
+					Categories = categories
 				};
 
 				return View(house);
 			}
 			catch (Exception)
 			{
-				return BadRequest("Something happened while trying to add a game! Please try again later!");
-			}
+                TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
+                return RedirectToAction("Index", "Home");
+            }
 
 		}
 
@@ -251,20 +271,19 @@ namespace GameStoreHub.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Categories = await categoryService.GetAllCategoriesAsync();
-
                 return View(model);
             }
 
             try
             {
                 await gameService.AddGameAsync(model);
+                TempData[ErrorMessage] = "You have successfully added a game!";
                 return RedirectToAction("All", "Game");
             }
             catch (Exception)
             {
                 ModelState.AddModelError(string.Empty, "Unexpected error occured while adding your new house. Please try again later or contact administrator");
                 model.Categories = await categoryService.GetAllCategoriesAsync();
-
                 return View(model);
             }
         }
