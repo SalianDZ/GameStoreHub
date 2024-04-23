@@ -34,5 +34,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 
 		Task<GamePreDeleteViewModel> GetGameForDeleteByIdAsync(string id);
 
+		Task DeleteGameByIdAsync(string gameId);
+
     }
 }

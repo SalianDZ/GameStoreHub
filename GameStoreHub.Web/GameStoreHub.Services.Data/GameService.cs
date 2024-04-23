@@ -272,5 +272,12 @@ namespace GameStoreHub.Services.Data
 				ImagePath = game.ImagePath
 			};
         }
+
+        public async Task DeleteGameByIdAsync(string gameId)
+        {
+            Game game = await dbContext.Games.Where(g => g.IsActive).FirstAsync(g => g.Id == Guid.Parse(gameId));
+			dbContext.Games.Remove(game);
+			await dbContext.SaveChangesAsync();
+        }
     }
 }

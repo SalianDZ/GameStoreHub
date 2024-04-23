@@ -356,6 +356,8 @@ namespace GameStoreHub.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
             bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
@@ -375,6 +377,36 @@ namespace GameStoreHub.Web.Controllers
             {
                 GamePreDeleteViewModel viewModel = await gameService.GetGameForDeleteByIdAsync(id);
                 return View(viewModel);
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Delete(string id, GamePreDeleteViewModel model)
+        {
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (id == null || !doesGameExist)
+            {
+                TempData[ErrorMessage] = "This game does not exist!";
+                return RedirectToAction("All", "Game");
+            }
+
+            if (!User.isAdmin())
+            {
+                TempData[ErrorMessage] = "You do not have access to this page!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            try
+            {
+                await gameService.DeleteGameByIdAsync(id);
+                TempData["WarningMessage"] = "The house was succcessfully deleted!";
+                return RedirectToAction("All", "Game");
             }
             catch (Exception)
             {
