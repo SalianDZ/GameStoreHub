@@ -1,10 +1,8 @@
 ﻿using GameStoreHub.Data;
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+using GameStoreHub.Web.ViewModels.User;
 using Microsoft.EntityFrameworkCore;
-using static GameStoreHub.Common.EntityValidationConstants;
 
 namespace GameStoreHub.Services.Data
 {
@@ -58,6 +56,33 @@ namespace GameStoreHub.Services.Data
 			ApplicationUser user = await dbContext.Users.FirstAsync(u => u.Id == Guid.Parse(userId));
 			user.WalletBalance += balance;
 			await dbContext.SaveChangesAsync();
+		}
+
+		public async Task<string> GetFullNameByIdAsync(string id)
+		{
+			ApplicationUser? user =
+				await dbContext.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(id));
+
+			if (user == null)
+			{
+				return string.Empty;
+			}
+
+			return $"{user.FirstName} {user.LastName}";
+		}
+
+		public async Task<IEnumerable<UserViewModel>> AllAsync()
+		{
+			IEnumerable<UserViewModel> allUsers =
+				await dbContext.Users.Select(u => new UserViewModel
+				{
+					Id = u.Id.ToString(),
+					FullName = u.FirstName + " " + u.LastName,
+					Email = u.Email,
+					Balance = u.WalletBalance.ToString("f2")
+				}).ToArrayAsync();
+
+			return allUsers;
 		}
 	}
 }

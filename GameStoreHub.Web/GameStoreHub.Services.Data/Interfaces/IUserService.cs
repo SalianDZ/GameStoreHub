@@ -1,6 +1,4 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Web.ViewModels.Order;
-using GameStoreHub.Web.ViewModels.OrderGame;
+﻿using GameStoreHub.Web.ViewModels.User;
 
 namespace GameStoreHub.Services.Data.Interfaces
 {
@@ -13,5 +11,9 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<bool> DeductBalanceByUserIdAsync(string userId, decimal price);
 
 		Task IncreaseUserBalance(string userId, decimal balance);
+
+		Task<string> GetFullNameByIdAsync(string userId);
+
+		Task<IEnumerable<UserViewModel>> AllAsync();
 	}
 }
