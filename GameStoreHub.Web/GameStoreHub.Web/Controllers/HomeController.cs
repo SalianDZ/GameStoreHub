@@ -1,8 +1,7 @@
 ﻿using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Game;
-using GameStoreHub.Web.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using static GameStoreHub.Common.EntityValidationConstants.GeneralApplicationConstants;
 
 namespace GameStoreHub.Web.Controllers
 {
@@ -19,6 +18,11 @@ namespace GameStoreHub.Web.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+			if (User.IsInRole(AdminRoleName))
+			{
+				return RedirectToAction("Index", "Home", new { Area = AdminAreaName});
+			}
+
 			var topSellingGames = await gameService.GetTopSellingGames(); // Fetch top-selling games
 			ViewBag.TopSellingGames = topSellingGames;
 			IEnumerable<GamesViewModel> latestGames = await gameService.GetLatestFiveGamesAsync();

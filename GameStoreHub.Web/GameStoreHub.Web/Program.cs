@@ -46,6 +46,7 @@ namespace GameStoreHub.Web
 			builder.Services.ConfigureApplicationCookie(cfg =>
 			{
 				cfg.LoginPath = "/User/Login";
+				cfg.AccessDeniedPath = "/Home/Error/401";
 			});
 
 			builder.Services.AddControllersWithViews()
@@ -80,10 +81,18 @@ namespace GameStoreHub.Web
 
 			app.SeedAdministrator(DevelopmentAdminEmail);
 
-			app.MapControllerRoute(
-				name: "default",
-				pattern: "{controller=Home}/{action=Index}/{id?}");
-			app.MapRazorPages();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
+                app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+            app.MapRazorPages();
 
 			app.Run();
 		}
