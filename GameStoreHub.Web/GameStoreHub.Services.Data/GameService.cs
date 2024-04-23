@@ -69,6 +69,7 @@ namespace GameStoreHub.Services.Data
 			return allGamesFromCategory;
 		}
 
+
 		public async Task<List<TopSellingGameViewModel>> GetTopSellingGames(int count = 5)
 		{ 
 			List<TopSellingGameViewModel> topSellingGames = await dbContext.OrderGames
@@ -171,22 +172,6 @@ namespace GameStoreHub.Services.Data
 			await dbContext.SaveChangesAsync();
         }
 
-		public async Task<IEnumerable<GamesViewModel>> GetAllGames()
-		{
-			IEnumerable<GamesViewModel> allGames = await dbContext.Games.Where(g => g.IsActive)
-				.Select(g => new GamesViewModel
-				{
-					Id = g.Id,
-					Title = g.Title,
-					Price = g.Price.ToString(),
-					Category = g.Category.Name,
-					ImagePath = g.ImagePath,
-					ReleaseDate = g.ReleaseDate
-				}).ToArrayAsync();
-
-			return allGames;
-		}
-
 		public async Task<AllGamesFilteredAndPagedServiceModel> AllAsync(AllGamesQueryModel queryModel)
 		{
 			IQueryable<Game> gamesQuery = dbContext.Games
@@ -246,7 +231,7 @@ namespace GameStoreHub.Services.Data
 			};
         }
 
-        public async Task EditHouseByIdAsync(GameFormViewModel model, string id)
+        public async Task EditGameByIdAsync(GameFormViewModel model, string id)
         {
 			Game game = await dbContext.Games.Where(g => g.IsActive).FirstAsync(g => g.Id == Guid.Parse(id));
 
@@ -260,6 +245,7 @@ namespace GameStoreHub.Services.Data
 
 			await dbContext.SaveChangesAsync();
         }
+
 
         public async Task<GamePreDeleteViewModel> GetGameForDeleteByIdAsync(string id)
         {

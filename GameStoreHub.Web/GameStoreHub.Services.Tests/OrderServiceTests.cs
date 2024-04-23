@@ -169,6 +169,7 @@ namespace GameStoreHub.Services.Tests
 				Game = game,
 				PriceAtPurchase = 0
 			});
+			await dbContext.SaveChangesAsync();
 
 			var items = await orderService.GetCartItemsByUserIdAsync(user.Id.ToString());
 

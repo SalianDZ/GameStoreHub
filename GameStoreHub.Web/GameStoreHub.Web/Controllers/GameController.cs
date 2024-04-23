@@ -345,7 +345,7 @@ namespace GameStoreHub.Web.Controllers
 
             try
             {
-                await gameService.EditHouseByIdAsync(model, id);
+                await gameService.EditGameByIdAsync(model, id);
                 TempData[SuccessMessage] = "You have successfully edited the game!";
                 return RedirectToAction("All", "Game");
             }

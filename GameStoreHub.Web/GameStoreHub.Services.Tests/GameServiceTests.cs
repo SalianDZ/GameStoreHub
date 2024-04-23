@@ -2,6 +2,7 @@
 using GameStoreHub.Data.Models;
 using GameStoreHub.Services.Data;
 using GameStoreHub.Services.Data.Interfaces;
+using GameStoreHub.Web.ViewModels.Game;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreHub.Services.Tests
@@ -267,5 +268,157 @@ namespace GameStoreHub.Services.Tests
 			var games = await gameService.GetSearchedGames("Nonexistent");
 			Assert.IsEmpty(games);
 		}
-	}
+
+        [Test]
+        public async Task AddGameAsync_SuccessfullyAddsGame()
+        {
+            var model = new GameFormViewModel
+            {
+                Title = "New Game",
+                Description = "A great game",
+                Price = 59.99M,
+                Developer = "Famous Dev",
+                ReleaseDate = DateTime.UtcNow,
+                CategoryId = 1,
+                ImagePath = "/images/new-game.jpg"
+            };
+
+            await gameService.AddGameAsync(model);
+
+            var game = await dbContext.Games.FirstOrDefaultAsync(g => g.Title == model.Title);
+            Assert.IsNotNull(game);
+            Assert.AreEqual(model.Title, game.Title);
+            Assert.AreEqual(model.Description, game.Description);
+            Assert.AreEqual(model.Price, game.Price);
+            Assert.AreEqual(model.Developer, game.Developer);
+            Assert.AreEqual(model.ReleaseDate, game.ReleaseDate);
+            Assert.AreEqual(model.CategoryId, game.CategoryId);
+            Assert.AreEqual(model.ImagePath, game.ImagePath);
+            Assert.IsTrue(game.IsActive);
+        }
+
+        [Test]
+        public async Task AddGameAsync_WhenTitleIsMissing_ThrowsException()
+        {
+            var model = new GameFormViewModel
+            {
+                // Title is omitted to simulate a missing required field
+                Description = "A great game",
+                Price = 59.99M,
+                Developer = "Famous Dev",
+                ReleaseDate = DateTime.UtcNow,
+                CategoryId = 1,
+                ImagePath = "/images/new-game.jpg"
+            };
+
+            // Expect an exception due to missing title
+            Assert.ThrowsAsync<DbUpdateException>(() => gameService.AddGameAsync(model));
+        }
+
+        [Test]
+        public async Task GetGameForEditByIdAsync_RetrievesActiveGame_ReturnsCorrectViewModel()
+        {
+            var game = dbContext.Games.First();
+            var viewModel = await gameService.GetGameForEditByIdAsync(game.Id.ToString());
+
+            Assert.AreEqual(game.Title, viewModel.Title);
+            Assert.AreEqual(game.Description, viewModel.Description);
+            Assert.AreEqual(game.Developer, viewModel.Developer);
+            Assert.AreEqual(game.ImagePath, viewModel.ImagePath);
+            Assert.AreEqual(game.Price, viewModel.Price);
+            Assert.AreEqual(game.ReleaseDate, viewModel.ReleaseDate);
+            Assert.AreEqual(game.CategoryId, viewModel.CategoryId);
+        }
+
+        [Test]
+        public void GetGameForEditByIdAsync_GameNotFound_ThrowsException()
+        {
+            var nonExistentGameId = Guid.NewGuid().ToString();
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                gameService.GetGameForEditByIdAsync(nonExistentGameId));
+        }
+
+        [Test]
+        public async Task EditGameByIdAsync_UpdatesGameCorrectly()
+        {
+            var game = await dbContext.Games.FirstAsync();
+            var model = new GameFormViewModel
+            {
+                Title = "Updated Title",
+                Description = "Updated Description",
+                Developer = "Updated Developer",
+                ImagePath = "/images/updated.jpg",
+                Price = 25.00M,
+                ReleaseDate = DateTime.UtcNow,
+                CategoryId = game.CategoryId
+            };
+
+            await gameService.EditGameByIdAsync(model, game.Id.ToString());
+
+            var updatedGame = await dbContext.Games.FirstAsync(g => g.Id == game.Id);
+            Assert.AreEqual(model.Title, updatedGame.Title);
+            Assert.AreEqual(model.Description, updatedGame.Description);
+            Assert.AreEqual(model.Developer, updatedGame.Developer);
+            Assert.AreEqual(model.ImagePath, updatedGame.ImagePath);
+            Assert.AreEqual(model.Price, updatedGame.Price);
+            Assert.AreEqual(model.ReleaseDate, updatedGame.ReleaseDate);
+            Assert.AreEqual(model.CategoryId, updatedGame.CategoryId);
+        }
+
+        [Test]
+        public void EditGameByIdAsync_GameNotFound_ThrowsException()
+        {
+            var model = new GameFormViewModel
+            {
+                Title = "New Title",
+                Description = "New Description",
+                Developer = "New Developer",
+                ImagePath = "/images/new.jpg",
+                Price = 30.00M,
+                ReleaseDate = DateTime.UtcNow,
+                CategoryId = 1
+            };
+
+            var nonExistentGameId = Guid.NewGuid().ToString();
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                gameService.EditGameByIdAsync(model, nonExistentGameId));
+        }
+
+        [Test]
+        public async Task GetGameForDeleteByIdAsync_RetrievesActiveGame_ReturnsCorrectViewModel()
+        {
+            var game = await dbContext.Games.FirstAsync();
+            var viewModel = await gameService.GetGameForDeleteByIdAsync(game.Id.ToString());
+
+            Assert.AreEqual(game.Title, viewModel.Title);
+            Assert.AreEqual(game.Description, viewModel.Description);
+            Assert.AreEqual(game.ImagePath, viewModel.ImagePath);
+        }
+
+        [Test]
+        public void GetGameForDeleteByIdAsync_GameNotFound_ThrowsException()
+        {
+            var nonExistentGameId = Guid.NewGuid().ToString();
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                gameService.GetGameForDeleteByIdAsync(nonExistentGameId));
+        }
+
+        [Test]
+        public async Task DeleteGameByIdAsync_DeletesGameSuccessfully()
+        {
+            var game = await dbContext.Games.FirstAsync();
+            await gameService.DeleteGameByIdAsync(game.Id.ToString());
+
+            var deletedGame = await dbContext.Games.FirstOrDefaultAsync(g => g.Id == game.Id);
+            Assert.IsNull(deletedGame);
+        }
+
+        [Test]
+        public void DeleteGameByIdAsync_GameNotFound_ThrowsException()
+        {
+            var nonExistentGameId = Guid.NewGuid().ToString();
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                gameService.DeleteGameByIdAsync(nonExistentGameId));
+        }
+    }
 }

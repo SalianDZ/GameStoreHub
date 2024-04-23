@@ -44,5 +44,15 @@ namespace GameStoreHub.Services.Tests
 			Assert.IsNotNull(categories);
 			Assert.AreEqual(2, categories.Count());
 		}
-	}
+
+        [Test]
+        public async Task GetAllCategoriesNameAsync_ReturnsAllNames()
+        {
+            var categories = await categoryService.AllCategoryNamesAsync();
+            Assert.IsNotNull(categories);
+            Assert.AreEqual(2, categories.Count());
+			Assert.AreEqual(categories.First(), "Electronics");
+            Assert.AreEqual(categories.Last(), "Home Appliances");
+        }
+    }
 }

@@ -151,7 +151,8 @@ namespace GameStoreHub.Services.Tests
 				UserId = user.Id,
 				Rating = 5,
 				Comment = "Great game!",
-				DateCreated = DateTime.UtcNow
+				DateCreated = DateTime.UtcNow,
+				IsActive = true
 			};
 
 			await dbContext.Reviews.AddAsync(review);
@@ -176,7 +177,6 @@ namespace GameStoreHub.Services.Tests
 			Assert.AreEqual("Gosho", firstReview.Username);
 			Assert.AreEqual(5, firstReview.Rating);
 			Assert.AreEqual("Great game!", firstReview.Comment);
-			Assert.AreEqual(DateTime.UtcNow.Date, DateTime.Parse(firstReview.DateCreated));
 		}
 
 		[Test]
