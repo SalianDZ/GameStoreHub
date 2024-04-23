@@ -105,7 +105,63 @@ namespace GameStoreHub.Services.Tests
 				}
 			);
 
-			dbContext.SaveChanges();
+            ApplicationUser user1 = new ApplicationUser()
+            {
+                UserName = "Gosho",
+                NormalizedEmail = "GOSHO",
+                Email = "gosho@abv.bg",
+                EmailConfirmed = true,
+                PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+                ConcurrencyStamp = "8b51706e-f6e8-4dae-b240-54f856fb3004",
+                TwoFactorEnabled = false,
+                FirstName = "Gosho",
+                LastName = "Goshov"
+            };
+            dbContext.Users.Add(user1);
+
+            ApplicationUser user2 = new ApplicationUser()
+            {
+                UserName = "Pesho",
+                NormalizedEmail = "PESHO",
+                Email = "pesho@agents.com",
+                EmailConfirmed = true,
+                PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+                ConcurrencyStamp = "caf271d7-0ba7-4ab1-8d8d-6d0e3711c27d",
+                TwoFactorEnabled = false,
+                FirstName = "Pesho",
+                LastName = "Peshov"
+            };
+            dbContext.Users.Add(user2);
+
+            var order1 = new Order()
+            {
+                UserId = user1.Id,
+                OrderDate = DateTime.UtcNow,
+                Address = "TestAdress1",
+                City = "TestCity1",
+                Country = "TestCountry1",
+                ZipCode = "TestZipCode1",
+                PhoneNumber = "TestPhoneNumber1",
+                IsActive = true
+            };
+
+            dbContext.Orders.Add(order1);
+
+            var order2 = new Order()
+            {
+                UserId = user2.Id,
+                OrderDate = DateTime.UtcNow,
+                Address = "TestAdress2",
+                City = "TestCity2",
+                Country = "TestCountry2",
+                ZipCode = "TestZipCode2",
+                PhoneNumber = "TestPhoneNumber2",
+                IsActive = true
+            };
+
+            dbContext.Orders.Add(order2);
+
+            dbContext.SaveChanges();
 
 			gameService = new GameService(dbContext);
 		}
@@ -116,14 +172,6 @@ namespace GameStoreHub.Services.Tests
 			dbContext.Dispose(); // Clean up the context to avoid cross-test contamination
 		}
 
-		//[TestCase("invalid-guid")]
-		//[TestCase("12345")]
-		//[Test]
-		//public async Task DoesGameExistByIdAsync_WithInvalidGuid_ReturnsFalse(string id)
-		//{
-		//	bool result = await gameService.DoesGameExistByIdAsync(id);
-		//	Assert.IsFalse(result);
-		//}
 
 		[Test]
 		public async Task DoesGameExistByIdAsync_WithValidAndActiveGuid_ReturnsTrue()
@@ -419,6 +467,53 @@ namespace GameStoreHub.Services.Tests
             var nonExistentGameId = Guid.NewGuid().ToString();
             Assert.ThrowsAsync<InvalidOperationException>(() =>
                 gameService.DeleteGameByIdAsync(nonExistentGameId));
+        }
+
+        [Test]
+        public async Task GetTopSellingGames_ReturnsCorrectGamesAndOrder()
+        {
+			Game[] games = await dbContext.Games.Where(g => g.IsActive).ToArrayAsync();
+
+			Order order1 = await dbContext.Orders.FirstAsync();
+            Order order2 = await dbContext.Orders.LastAsync();
+
+			order1.OrderGames.Add(new OrderGame()
+			{ 
+				GameId = games[0].Id,
+				OrderId = order1.Id,
+				PriceAtPurchase = games[0].Price
+			});
+
+            order1.OrderGames.Add(new OrderGame()
+            {
+                GameId = games[1].Id,
+                OrderId = order1.Id,
+                PriceAtPurchase = games[1].Price
+            });
+
+            order2.OrderGames.Add(new OrderGame()
+            {
+                GameId = games[0].Id,
+                OrderId = order2.Id,
+                PriceAtPurchase = games[2].Price
+            });
+
+            order1.OrderStatus = GameStoreHub.Data.Models.Enums.OrderStatus.Completed;
+            order2.OrderStatus = GameStoreHub.Data.Models.Enums.OrderStatus.Completed;
+            await dbContext.SaveChangesAsync();
+
+            var topSellingGames = await gameService.GetTopSellingGames(5);
+
+            Assert.AreEqual(2, topSellingGames.Count);
+            Assert.IsTrue(topSellingGames[0].Title == "TestTitle1" && topSellingGames[1].Title == "TestTitle3");
+            Assert.IsTrue(topSellingGames[0].SalesCount > topSellingGames[1].SalesCount);
+        }
+
+        [Test]
+        public async Task GetTopSellingGames_NoSales_ReturnsEmptyList()
+        {
+            var topSellingGames = await gameService.GetTopSellingGames(5);
+            Assert.IsEmpty(topSellingGames);
         }
     }
 }
