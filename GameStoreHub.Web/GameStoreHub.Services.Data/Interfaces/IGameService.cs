@@ -32,5 +32,7 @@ namespace GameStoreHub.Services.Data.Interfaces
 
 		Task EditHouseByIdAsync(GameFormViewModel model, string id);
 
+		Task<GamePreDeleteViewModel> GetGameForDeleteByIdAsync(string id);
+
     }
 }

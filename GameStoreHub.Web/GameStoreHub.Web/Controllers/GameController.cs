@@ -43,7 +43,7 @@ namespace GameStoreHub.Web.Controllers
 			catch (Exception)
 			{
                 TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
-				return RedirectToAction("All", "Game");
+				return RedirectToAction("Index", "Home");
             }
         }
 
@@ -135,7 +135,7 @@ namespace GameStoreHub.Web.Controllers
             catch (Exception)
             {
                 TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
-                return RedirectToAction("OwnedGames", "Game");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -352,7 +352,34 @@ namespace GameStoreHub.Web.Controllers
             catch (Exception)
             {
                 TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (id == null || !doesGameExist)
+            {
+                TempData[ErrorMessage] = "This game does not exist!";
                 return RedirectToAction("All", "Game");
+            }
+
+            if (!User.isAdmin())
+            {
+                TempData[ErrorMessage] = "You do not have access to this page!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            try
+            {
+                GamePreDeleteViewModel viewModel = await gameService.GetGameForDeleteByIdAsync(id);
+                return View(viewModel);
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "An unexpected error occurred while processing your order. Please try again.";
+                return RedirectToAction("Index", "Home");
             }
         }
     }

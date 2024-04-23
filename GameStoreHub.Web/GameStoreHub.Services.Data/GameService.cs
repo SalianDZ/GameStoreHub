@@ -260,5 +260,17 @@ namespace GameStoreHub.Services.Data
 
 			await dbContext.SaveChangesAsync();
         }
+
+        public async Task<GamePreDeleteViewModel> GetGameForDeleteByIdAsync(string id)
+        {
+            Game game = await dbContext.Games.Where(g => g.IsActive).FirstAsync(g => g.Id == Guid.Parse(id));
+
+			return new GamePreDeleteViewModel()
+			{ 
+				Title = game.Title,
+				Description = game.Description,
+				ImagePath = game.ImagePath
+			};
+        }
     }
 }
