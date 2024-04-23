@@ -80,6 +80,9 @@
 			public const int EntitiesPerPage = 3;
 
 			public const string AdminAreaName = "Admin";
+
+			public const string OnlineUsersCookieName = "IsOnline";
+			public const int LastActivityBeforeOfflineMinutes = 10;
 		}
     }
 }

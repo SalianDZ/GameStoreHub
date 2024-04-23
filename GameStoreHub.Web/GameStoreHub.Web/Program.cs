@@ -79,7 +79,12 @@ namespace GameStoreHub.Web
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			app.SeedAdministrator(DevelopmentAdminEmail);
+			app.EnableOnlineUsersCheck();
+
+			if (app.Environment.IsDevelopment())
+			{
+				app.SeedAdministrator(DevelopmentAdminEmail);
+			}
 
             app.UseEndpoints(endpoints =>
             {
