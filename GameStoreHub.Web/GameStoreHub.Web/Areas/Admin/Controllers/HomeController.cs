@@ -8,5 +8,17 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error(int statusCode)
+        //{
+
+        //    if (statusCode == 401 || statusCode == 403)
+        //    {
+        //        return View("Error403");
+        //    }
+
+        //    return View();
+        //}
     }
 } 

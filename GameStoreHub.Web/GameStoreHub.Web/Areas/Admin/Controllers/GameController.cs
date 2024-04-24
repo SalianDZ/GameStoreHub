@@ -46,7 +46,6 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Add()
 		{
             if (!User.isAdmin())

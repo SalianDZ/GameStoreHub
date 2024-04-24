@@ -46,7 +46,6 @@ namespace GameStoreHub.Web
 			builder.Services.ConfigureApplicationCookie(cfg =>
 			{
 				cfg.LoginPath = "/User/Login";
-                //cfg.AccessDeniedPath = "/Home/Error/403";
             });
 
 			builder.Services.AddControllersWithViews()
