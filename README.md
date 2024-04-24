@@ -53,8 +53,10 @@ Database: SQL Server is used in development, with plans to use the same for prod
 Version Control: Utilizes Git for version control, hosting the repository on platforms like GitHub for collaboration and backup.
 
 Admin Login:
-email: admin@gamefinity.com 
-password: 123456
+
+Email: admin@gamefinity.com 
+
+Password: 123456
 
 Future Enhancements
 Advanced Search: Implement full-text search or use third-party services like Elasticsearch.
