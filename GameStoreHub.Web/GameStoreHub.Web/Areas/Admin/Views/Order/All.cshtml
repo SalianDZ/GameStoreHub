@@ -1,0 +1,36 @@
+﻿@model IEnumerable<OrderViewModel>
+@{
+	ViewBag.Title = "All Orders";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><label>Order Id</label></th>
+			<th><label>User</label></th>
+			<th><label>TotalPrice</label></th>
+			<th><label>Order is Completed</label></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var order in Model)
+		{
+			<tr>
+				<td><label>@order.OrderId</label></td>
+				<td><label>@order.UserFullName</label></td>
+				<td><label>@order.TotalPrice</label></td>
+				<td>
+					@if (order.IsOrderCompleted)
+					{
+						<label>✔</label>
+					}
+					else
+					{
+						<label class="text-center">❌</label>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

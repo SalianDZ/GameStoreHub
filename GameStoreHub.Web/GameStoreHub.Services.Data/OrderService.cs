@@ -5,6 +5,7 @@ using GameStoreHub.Services.Data.Interfaces;
 using GameStoreHub.Web.ViewModels.Order;
 using GameStoreHub.Web.ViewModels.OrderGame;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace GameStoreHub.Services.Data
 {
@@ -231,5 +232,19 @@ namespace GameStoreHub.Services.Data
 		{
 			return Guid.NewGuid().ToString();
 		}
-    }
+
+		public async Task<IEnumerable<OrderViewModel>> AllOrdersAsync()
+		{
+			IEnumerable<OrderViewModel> allOrders = await dbContext.Orders.Where(o => o.IsActive)
+				.Select(o => new OrderViewModel()
+				{
+					OrderId = o.Id.ToString(),
+					UserFullName = o.User.FirstName + " " + o.User.LastName,
+					TotalPrice = o.TotalPrice.ToString("f2"),
+					IsOrderCompleted = o.OrderStatus == OrderStatus.Completed
+				}).ToArrayAsync();
+
+			return allOrders;
+		}
+	}
 }

@@ -1,5 +1,4 @@
-﻿using GameStoreHub.Common;
-using GameStoreHub.Data.Models;
+﻿using GameStoreHub.Data.Models;
 using GameStoreHub.Web.ViewModels.Order;
 using GameStoreHub.Web.ViewModels.OrderGame;
 
@@ -26,6 +25,9 @@ namespace GameStoreHub.Services.Data.Interfaces
 		Task<IEnumerable<CheckoutItemViewModel>> GetPurchasedItemsByUserIdAsync(string userId);
 
 		Task<bool> IsGameAlreadyBoughtBefore(string userId, string gameId);
+
 		Task<string> GetActivationCodeByUserAndGameIdAsync(string userId, string gameId);
+
+		Task<IEnumerable<OrderViewModel>> AllOrdersAsync();
 	}
 }
