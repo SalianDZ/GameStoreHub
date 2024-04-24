@@ -33,8 +33,9 @@ Users can view their past orders and details.
 Payment System:
 Simulated payment interface for adding funds (educational purposes only, no real transactions).
 
-Search Functionality:
+Search Functionality and filters:
 Enables users to search for games based on titles or descriptions.
+You can filter and also there is pagination.
 
 Security:
 Implements measures against common vulnerabilities like XSS.
@@ -50,6 +51,10 @@ Local Development: Using Visual Studio as the primary IDE for development.
 Database: SQL Server is used in development, with plans to use the same for production.
 
 Version Control: Utilizes Git for version control, hosting the repository on platforms like GitHub for collaboration and backup.
+
+Admin Login:
+email: admin@gamefinity.com 
+password: 123456
 
 Future Enhancements
 Advanced Search: Implement full-text search or use third-party services like Elasticsearch.
