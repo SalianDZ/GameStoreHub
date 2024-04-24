@@ -5,6 +5,7 @@ using GameStoreHub.Services.Data.Interfaces;
 using static GameStoreHub.Common.NotificationMessagesConstants;
 using GameStoreHub.Web.Infrastructure.Extensions;
 using GameStoreHub.Web.ViewModels.Category;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameStoreHub.Web.Areas.Admin.Controllers
 {
@@ -21,7 +22,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> All([FromQuery] AllGamesQueryModel queryModel)
 		{
-			try
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            try
 			{
 				AllGamesFilteredAndPagedServiceModel serviceModel =
 				await gameService.AllAsync(queryModel);
@@ -35,14 +41,20 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 			catch (Exception)
 			{
 				TempData[ErrorMessage] = "Unexpected error occured! Please try again later";
-				return RedirectToAction("Index", "Home");
+	 			return RedirectToAction("Index", "Home");
 			}
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Add()
 		{
-			string userId = User.GetId();
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            string userId = User.GetId();
 
 			try
 			{
@@ -67,7 +79,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add(GameFormViewModel model)
 		{
-			string userId = User.GetId();
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            string userId = User.GetId();
 
 			if (model.CategoryId < 1 || model.CategoryId > 5)
 			{
@@ -97,7 +114,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Edit(string id)
 		{
-			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 			if (id == null || !doesGameExist)
 			{
 				TempData[ErrorMessage] = "This game does not exist!";
@@ -126,7 +148,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(GameFormViewModel model, string id)
 		{
-			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 			if (id == null || !doesGameExist)
 			{
 				TempData[ErrorMessage] = "This game does not exist!";
@@ -161,7 +188,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(string id)
 		{
-			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 			if (id == null || !doesGameExist)
 			{
 				TempData[ErrorMessage] = "This game does not exist!";
@@ -189,7 +221,12 @@ namespace GameStoreHub.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(string id, GamePreDeleteViewModel model)
 		{
-			bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
+            if (!User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            bool doesGameExist = await gameService.DoesGameExistByIdAsync(id);
 			if (id == null || !doesGameExist)
 			{
 				TempData[ErrorMessage] = "This game does not exist!";

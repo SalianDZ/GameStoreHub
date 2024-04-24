@@ -83,9 +83,9 @@
 						{
 							<li style="color:white;">Hello, @fullName</li>
 							<li><a asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-o"></i> My Account</a></li>
-							<li><a asp-controller="User" asp-action="AddFunds">Add funds</a></li>
+							<li><a asp-area="" asp-controller="User" asp-action="AddFunds">Add funds</a></li>
 							<li><a>$@await userService.GetUserBalanceByIdAsync(User.GetId())</a></li>
-							<form asp-controller="User" asp-action="Logout" method="post" style="display: inline-block">
+							<form asp-area="" asp-controller="User" asp-action="Logout" method="post" style="display: inline-block">
 								<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
 							</form> 
 						}
@@ -114,7 +114,7 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form asp-controller="Game" asp-action="Search" method="get">
+								<form asp-area="" asp-controller="Game" asp-action="Search" method="get">
 									<input type="text" name="query" class="input" placeholder="Search here">
 									<button type="submit" class="search-btn">Search</button>
 								</form>
@@ -148,17 +148,17 @@
 															<img src="@Url.Content($"~/{wishlistItem.GameImagePath}")" alt="">
 														</div>
 														<div class="product-body">
-															<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@wishlistItem.GameId">@wishlistItem.GameTitle</a></h3>
+															<h3 class="product-name"><a asp-area="" asp-controller="Game" asp-action="Details" asp-route-id="@wishlistItem.GameId">@wishlistItem.GameTitle</a></h3>
 															<h3 class="product-price">$@wishlistItem.PriceAtPurchase</h3>
-															<a class="btn btn-primary btn-sm" asp-controller="Order" asp-action="AddToCart" asp-route-id="@wishlistItem.GameId">Add item to cart</a>
+															<a class="btn btn-primary btn-sm" asp-area="" asp-controller="Order" asp-action="AddToCart" asp-route-id="@wishlistItem.GameId">Add item to cart</a>
 														</div>
-														<a class="delete" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@wishlistItem.GameId"><i class="fa fa-close"></i></a>
+														<a class="delete" asp-area="" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@wishlistItem.GameId"><i class="fa fa-close"></i></a>
 													</div>
 												}
 											</div>
 										}
 										<div class="cart-btns text-center">
-											<a asp-controller="Order" asp-action="Cart">View Cart</a>
+											<a asp-area="" asp-controller="Order" asp-action="Cart">View Cart</a>
 										</div>
 									}
 									else
@@ -198,10 +198,10 @@
 																<img src="@Url.Content($"~/{cartItem.GameImagePath}")" alt="">
 															</div>
 															<div class="product-body">
-																<h3 class="product-name"><a asp-controller="Game" asp-action="Details" asp-route-id="@cartItem.GameId">@cartItem.GameTitle</a></h3>
+																<h3 class="product-name"><a asp-area="" asp-controller="Game" asp-action="Details" asp-route-id="@cartItem.GameId">@cartItem.GameTitle</a></h3>
 																<h4 class="product-price">$@cartItem.PriceAtPurchase</h4>
 															</div>
-														<a class="delete" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>
+														<a class="delete" asp-area="" asp-controller="Order" asp-action="RemoveFromIndexCart" asp-route-id="@cartItem.GameId"><i class="fa fa-close"></i></a>
 														</div>
 													}
 												</div>
@@ -211,8 +211,8 @@
 												<h5>SUBTOTAL: $@cartItems.Sum(ci => ci.PriceAtPurchase)</h5>
 											</div>
 											<div class="cart-btns">
-												<a asp-controller="Order" asp-action="Cart">View Cart</a>
-												<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+												<a asp-area="" asp-controller="Order" asp-action="Cart">View Cart</a>
+												<a asp-area="" asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 											</div>
 										}
 										else
@@ -225,8 +225,8 @@
 												<h5>SUBTOTAL: $0</h5>
 											</div>
 											<div class="cart-btns">
-												<a asp-controller="Order" asp-action="Cart">View Cart</a>
-												<a asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+												<a asp-area="" asp-controller="Order" asp-action="Cart">View Cart</a>
+												<a asp-area="" asp-controller="Order" asp-action="Checkout">Checkout <i class="fa fa-arrow-circle-right"></i></a>
 											</div>
 										}
 									</div>
@@ -277,9 +277,9 @@
 						<div class="footer">
 							<h3 class="footer-title">Categories</h3>
 							<ul class="footer-links">
-								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="1">Action Titles</a></li>
-								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="2">Horror Titles</a></li>
-								<li><a asp-controller="Game" asp-action="GamesByCategory" asp-route-id="5">Sport Titles</a></li>
+								<li><a asp-area="" asp-controller="Game" asp-action="GamesByCategory" asp-route-id="1">Action Titles</a></li>
+								<li><a asp-area="" asp-controller="Game" asp-action="GamesByCategory" asp-route-id="2">Horror Titles</a></li>
+								<li><a asp-area="" asp-controller="Game" asp-action="GamesByCategory" asp-route-id="5">Sport Titles</a></li>
 							</ul>
 						</div>
 					</div>
@@ -307,7 +307,7 @@
 								{
 									<li><a asp-area="Identity" asp-page="/Account/Manage/Index">My Account</a></li>
 								}
-								<li><a asp-controller="Order" asp-action="Cart">View Cart</a></li>
+								<li><a asp-area="" asp-controller="Order" asp-action="Cart">View Cart</a></li>
 								<li><a href="#">Track My Order</a></li>
 								<li><a href="#">Help</a></li>
 							</ul>
